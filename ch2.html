@@ -1,177 +1,331 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" translate="no">
 <head>
     <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>서울대 한국어 2A - 2과 연습</title>
+    <title>서울대 한국어 2A - 2과 마스터</title>
     <style>
-        body { font-family: 'Malgun Gothic', sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; background-color: #f9f9f9; }
-        h1 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .info-box { background: #e8f4f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #3498db; }
-        .timer { color: #e74c3c; font-size: 1.3em; font-weight: bold; }
-        .stage-container { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .stage-title { color: #fff; background-color: #2c3e50; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 1.2em; text-align: center;}
+        body { font-family: 'Malgun Gothic', sans-serif; line-height: 1.6; padding: 20px; max-width: 850px; margin: 0 auto; background-color: #f4f7f6; color: #333; }
+        h1 { text-align: center; color: #2c3e50; border-bottom: 3px solid #27ae60; padding-bottom: 10px; }
+        .action-btn { padding: 12px 20px; color: white; border: none; border-radius: 8px; font-size: 1em; cursor: pointer; font-weight: bold; transition: 0.2s; margin: 5px; }
+        .start-btn { background: #27ae60; }
+        .next-btn { background: #e67e22; }
+        .submit-btn { background: #2980b9; }
+        .action-btn:hover { opacity: 0.9; }
         
-        /* 새로 추가된 문법 참고 박스 스타일 */
-        .grammar-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin-bottom: 20px; border-radius: 5px; color: #856404; }
-        .grammar-box h3 { margin: 0 0 10px 0; font-size: 1.1em; color: #664d03; }
-        .grammar-box ul { margin: 0; padding-left: 20px; font-weight: normal; }
-        .grammar-box li { margin-bottom: 5px; }
-
-        .question-item { margin-bottom: 20px; font-size: 1.1em; }
-        .dialogue { background: #f1f2f6; padding: 15px; border-radius: 5px; }
-        select { padding: 5px; font-size: 1em; border-radius: 4px; border: 1px solid #bdc3c7; }
-        input[type="text"] { border: 1px solid #bdc3c7; border-radius: 4px; padding: 5px; font-size: 1em; width: 150px; }
-        .action-btn { display: block; width: 100%; padding: 15px; color: white; border: none; border-radius: 8px; font-size: 1.2em; cursor: pointer; margin-top: 20px; font-weight: bold; }
-        .submit-btn { background: #27ae60; }
-        .submit-btn:hover { background: #2ecc71; }
-        .next-btn { background: #e67e22; display: none; }
-        .next-btn:hover { background: #d35400; }
-        .correct-answer { color: #e74c3c; font-size: 0.9em; display: none; margin-top: 5px; font-weight: bold; }
-        .feedback { text-align: center; font-size: 1.2em; font-weight: bold; color: #2980b9; margin-top: 10px; display: none; }
+        #main-menu { text-align: center; margin-top: 50px; }
+        .menu-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; cursor: pointer; border: 3px solid transparent; transition: 0.3s; }
+        .menu-card:hover { border-color: #27ae60; transform: translateY(-5px); }
+        .menu-card h2 { color: #27ae60; margin-top: 0; }
+        
+        .stage-container { background: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: none; }
+        .stage-title { background-color: #2c3e50; color: #fff; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 1.2em; }
+        .question-item { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #eee; font-size: 1.1em; }
+        
+        /* 다국어 힌트 스타일 */
+        .lang-hint { display: block; font-size: 0.85em; color: #16a085; margin-bottom: 5px; font-weight: normal; }
+        .lang-hint span { color: #7f8c8d; font-size: 0.9em; margin-right: 5px; }
+        
+        input[type="text"] { border: 2px solid #ddd; border-radius: 6px; padding: 6px 10px; font-size: 1em; width: 180px; outline: none; font-weight: bold; color: #2c3e50; text-align: center; }
+        input[type="text"]:focus { border-color: #27ae60; }
+        .correct-answer { color: #e74c3c; font-weight: bold; margin-top: 5px; font-size: 0.9em; display: none; }
+        
+        /* 2단계 게임 디자인 */
+        .ox-game-board, .puzzle-board { text-align: center; padding: 20px; }
+        .ox-question { font-size: 1.3em; font-weight: bold; min-height: 80px; display: flex; align-items: center; justify-content: center; background: #e8f4f8; border-radius: 12px; margin-bottom: 20px; padding: 20px; color: #2c3e50; }
+        .ox-btn { width: 80px; height: 80px; font-size: 2em; border-radius: 50%; border: none; cursor: pointer; color: white; margin: 0 15px; transition: 0.1s; }
+        .btn-o { background: #3498db; } .btn-x { background: #e74c3c; }
+        
+        .chat-container { background: #abc1d1; padding: 15px; border-radius: 15px; max-width: 450px; margin: 0 auto; height: 450px; display: flex; flex-direction: column; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
+        .chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 10px; }
+        .chat-bubble { max-width: 80%; padding: 10px 14px; border-radius: 15px; font-size: 0.95em; line-height: 1.4; }
+        .npc-bubble { background: #fff; align-self: flex-start; border-top-left-radius: 0; }
+        .user-bubble { background: #ffeb33; align-self: flex-end; border-top-right-radius: 0; }
+        .chat-choices { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; }
+        .choice-btn { background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 10px; text-align: left; cursor: pointer; font-size: 0.9em; }
+        .choice-btn:hover { background: #f0f0f0; }
+        
+        .drop-zone { min-height: 60px; border: 2px dashed #27ae60; background: #fafafa; border-radius: 10px; padding: 15px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; }
+        .word-bank { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 15px; background: #e9ecef; border-radius: 10px; }
+        .word-block { background: #27ae60; color: white; padding: 8px 15px; border-radius: 15px; cursor: pointer; font-weight: bold; user-select: none; }
+        
+        .report-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .report-table th, .report-table td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+        .report-table th { background: #27ae60; color: white; }
+        .total-score { font-size: 1.5em; color: #e74c3c; font-weight: bold; margin-top: 20px; text-align: center; }
     </style>
 </head>
 <body>
 
-    <h1>📝 2과: 부탁과 약속</h1>
+    <h1>🌿 2과: 취미가 뭐예요?</h1>
     
-    <div class="info-box">
-        <div id="stageIndicator">현재 단계: 1단계 (워밍업)</div>
-        <div class="timer" id="timerDisplay">남은 시간: 03:00</div>
+    <div id="main-menu">
+        <div class="menu-card" onclick="startModule('basic')">
+            <h2>📝 1단계: 기본 핵심 체크</h2>
+            <p>다국어 힌트 기반 어휘 & 핵심 문법 활용 (총 15문항)</p>
+        </div>
+        <div class="menu-card" onclick="startModule('app')">
+            <h2>🎮 2단계: 응용 미션 게임</h2>
+            <p>스피드 O/X, 톡톡 메신저, 문장 퍼즐 조립 (총 15문항)</p>
+        </div>
     </div>
 
-    <div id="stage1" class="stage-container">
-        <div class="stage-title">🌱 1단계: 워밍업 (기본 형태 연습) - 3분</div>
-        <p>※ 빈칸에 알맞은 형태를 고르세요.</p>
-        <div class="question-item"><div class="dialogue">1. 더우니까 창문을 <select class="q1-input" data-answer="열어 주세요"><option value="">선택</option><option value="열어 주세요">열어 주세요</option><option value="열으어 주세요">열으어 주세요</option></select></div><div class="correct-answer">정답: 열어 주세요</div></div>
-        <div class="question-item"><div class="dialogue">2. 이 일은 제가 <select class="q1-input" data-answer="할게요"><option value="">선택</option><option value="할게요">할게요</option><option value="하을게요">하을게요</option></select></div><div class="correct-answer">정답: 할게요</div></div>
-        <div class="question-item"><div class="dialogue">3. 내일 시험이 있어서 공부를 <select class="q1-input" data-answer="해야 해요"><option value="">선택</option><option value="해야 해요">해야 해요</option><option value="하아야 해요">하아야 해요</option></select></div><div class="correct-answer">정답: 해야 해요</div></div>
-        <div class="question-item"><div class="dialogue">4. 칠판 글씨가 안 보여요. 조금 크게 <select class="q1-input" data-answer="써 주세요"><option value="">선택</option><option value="써 주세요">써 주세요</option><option value="쓰어 주세요">쓰어 주세요</option></select></div><div class="correct-answer">정답: 써 주세요</div></div>
-        <div class="question-item"><div class="dialogue">5. 내일은 수업에 늦지 <select class="q1-input" data-answer="않을게요"><option value="">선택</option><option value="않을게요">않을게요</option><option value="안을게요">안을게요</option></select></div><div class="correct-answer">정답: 않을게요</div></div>
-        
-        <div class="feedback" id="feedback1"></div>
-        <button class="action-btn submit-btn" onclick="checkAnswers(1)">1단계 정답 확인</button>
-        <button class="action-btn next-btn" id="next1" onclick="nextStage(2)">2단계로 이동하기 ➔</button>
+    <div id="module-basic" style="display:none;">
+        <div id="basic-start" style="text-align: center; background:white; padding:40px; border-radius:15px;">
+            <h3>이름을 입력하고 학습을 시작하세요.</h3>
+            <input type="text" id="userName1" placeholder="이름 입력"><br><br>
+            <button class="action-btn start-btn" onclick="runBasic()">기본 학습 시작하기</button>
+            <button class="action-btn" onclick="location.reload()" style="background:#95a5a6;">뒤로 가기</button>
+        </div>
+        <div id="basic-stage-area"></div>
+        <div id="basic-result" style="display:none; background:white; padding:30px; border-radius:15px;">
+            <h2 style="text-align:center;">🏆 최종 결과 리포트</h2>
+            <p style="text-align:center;"><strong>학생 성함:</strong> <span id="resName1"></span></p>
+            <table class="report-table">
+                <thead><tr><th>단계</th><th>맞힌 문항 수</th><th>점수</th></tr></thead>
+                <tbody id="basic-report-body"></tbody>
+            </table>
+            <div class="total-score">최종 정답 수: <span id="totalScore1"></span> / 15개</div>
+            <button class="action-btn next-btn" onclick="location.reload()" style="display:block; margin:30px auto 0;">메인 화면으로 돌아가기</button>
+        </div>
     </div>
 
-    <div id="stage2" class="stage-container" style="display: none;">
-        <div class="stage-title">🌿 2단계: 문법 적용 (대화문 완성) - 5분</div>
-        <p>※ 대화를 읽고 빈칸에 알맞은 말을 고르세요.</p>
-        <div class="question-item"><div class="dialogue">1. 가: 에어컨 좀 <select class="q2-input" data-answer="켜 주시겠어요"><option value="">선택</option><option value="켜 주시겠어요">켜 주시겠어요?</option><option value="켤게요">켤게요?</option></select><br>나: 네, 켜 드릴게요.</div><div class="correct-answer">정답: 켜 주시겠어요?</div></div>
-        <div class="question-item"><div class="dialogue">2. 가: 이 복사기 어떻게 써요?<br>나: 제가 <select class="q2-input" data-answer="가르쳐 드릴게요"><option value="">선택</option><option value="가르쳐 드릴게요">가르쳐 드릴게요.</option><option value="가르쳐야 해요">가르쳐야 해요.</option></select></div><div class="correct-answer">정답: 가르쳐 드릴게요.</div></div>
-        <div class="question-item"><div class="dialogue">3. 가: 오늘 영화 볼까요?<br>나: 미안해요. 오늘은 아르바이트를 <select class="q2-input" data-answer="해야 돼요"><option value="">선택</option><option value="해야 돼요">해야 돼요.</option><option value="해 주세요">해 주세요.</option></select></div><div class="correct-answer">정답: 해야 돼요.</div></div>
-        <div class="question-item"><div class="dialogue">4. 가: 제가 청소할까요?<br>나: 아니요, 괜찮아요. 제가 <select class="q2-input" data-answer="할게요"><option value="">선택</option><option value="할게요">할게요.</option><option value="해 주세요">해 주세요.</option></select></div><div class="correct-answer">정답: 할게요.</div></div>
-        <div class="question-item"><div class="dialogue">5. 가: 사진 좀 <select class="q2-input" data-answer="찍어 주세요"><option value="">선택</option><option value="찍을게요">찍을게요.</option><option value="찍어 주세요">찍어 주세요.</option></select><br>나: 네, 하나, 둘, 셋!</div><div class="correct-answer">정답: 찍어 주세요.</div></div>
-        
-        <div class="feedback" id="feedback2"></div>
-        <button class="action-btn submit-btn" onclick="checkAnswers(2)">2단계 정답 확인</button>
-        <button class="action-btn next-btn" id="next2" onclick="nextStage(3)">3단계로 이동하기 ➔</button>
-    </div>
-
-    <div id="stage3" class="stage-container" style="display: none;">
-        <div class="stage-title">🌳 3단계: 심화 (직접 쓰기) - 7분</div>
-        
-        <div class="grammar-box">
-            <h3>📌 [참고] 2과 목표 문법</h3>
-            <ul>
-                <li><strong>V-아/어 주다</strong> (다른 사람을 위해 행동할 때 / 부탁할 때)</li>
-                <li><strong>V-(으)ㄹ게요</strong> (자신의 의지나 약속을 나타낼 때)</li>
-                <li><strong>A/V-아/어야 되다/하다</strong> (의무나 필요성을 나타낼 때)</li>
-            </ul>
+    <div id="module-app" style="display:none;">
+        <div id="app-start" style="text-align: center; background:white; padding:40px; border-radius:15px;">
+            <h3>인터랙티브 응용 미션에 도전하세요!</h3>
+            <input type="text" id="userName2" placeholder="이름 입력"><br><br>
+            <button class="action-btn start-btn" onclick="runApp()">미션 시작하기</button>
+            <button class="action-btn" onclick="location.reload()" style="background:#95a5a6;">뒤로 가기</button>
         </div>
 
-        <p>※ 괄호 안의 단어와 위의 목표 문법을 사용하여 대화를 완성하세요. (직접 입력)</p>
-        <div class="question-item"><div class="dialogue">1. 가: 무거워 보이네요. 제가 도와드릴까요?<br>나: 네, 이 가방 좀 <input type="text" class="q3-input" data-answer="들어주세요">. [들다]</div><div class="correct-answer">정답: 들어 주세요</div></div>
-        <div class="question-item"><div class="dialogue">2. 가: 회의 준비는 다 끝났어요?<br>나: 아니요, 지금부터 <input type="text" class="q3-input" data-answer="해야해요">. [하다]</div><div class="correct-answer">정답: 해야 해요 (또는 해야 돼요)</div></div>
-        <div class="question-item"><div class="dialogue">3. 가: 우유가 없네요.<br>나: 그래요? 제가 편의점에서 <input type="text" class="q3-input" data-answer="사올게요">. [사 오다]</div><div class="correct-answer">정답: 사 올게요</div></div>
-        <div class="question-item"><div class="dialogue">4. 가: 너무 시끄러워요.<br>나: 죄송합니다. 조용히 <input type="text" class="q3-input" data-answer="할게요">. [하다]</div><div class="correct-answer">정답: 할게요</div></div>
-        <div class="question-item"><div class="dialogue">5. 가: 감기에 걸렸어요.<br>나: 약을 먹고 푹 <input type="text" class="q3-input" data-answer="쉬어야해요">. [쉬다]</div><div class="correct-answer">정답: 쉬어야 해요 (또는 쉬어야 돼요)</div></div>
-        
-        <div class="feedback" id="feedback3"></div>
-        <button class="action-btn submit-btn" onclick="checkAnswers(3)">최종 정답 확인</button>
-        <button class="action-btn next-btn" id="next3" onclick="finishQuiz()" style="background-color: #8e44ad;">🎉 수고하셨습니다 (처음으로)</button>
+        <div id="app-s1" class="stage-container">
+            <div class="stage-title">🎯 미션 1: 스피드 O/X (5문항)</div>
+            <div class="ox-game-board">
+                <div class="ox-question" id="ox-q-text">문제를 불러오는 중...</div>
+                <div id="ox-btns">
+                    <button class="ox-btn btn-o" onclick="checkOx('O')">O</button>
+                    <button class="ox-btn btn-x" onclick="checkOx('X')">X</button>
+                </div>
+                <button id="ox-finish-btn" class="action-btn next-btn" style="display:none; width:100%; margin-top:20px;" onclick="nextMission(2)">미션 2 (톡톡 메신저) 이동 ➔</button>
+            </div>
+        </div>
+
+        <div id="app-s2" class="stage-container">
+            <div class="stage-title">💬 미션 2: 톡톡 메신저 (5문항)</div>
+            <p style="text-align:center; font-size:0.9em; color:#666;">상황에 부합하는 올바른 문법 답변을 고르세요.</p>
+            <div class="chat-container">
+                <div class="chat-history" id="chat-hist"></div>
+                <div class="chat-choices" id="chat-opts"></div>
+            </div>
+            <button id="chat-finish-btn" class="action-btn next-btn" style="display:none; width:100%; margin-top:20px;" onclick="nextMission(3)">미션 3 (문장 퍼즐) 이동 ➔</button>
+        </div>
+
+        <div id="app-s3" class="stage-container">
+            <div class="stage-title">🧩 미션 3: 문장 퍼즐 조립 (5문항)</div>
+            <p style="text-align:center; font-size:0.9em; color:#2c3e50; font-weight:bold;" id="puzzle-hint">힌트 내용</p>
+            <div class="puzzle-board">
+                <div class="drop-zone" id="p-zone"></div>
+                <div class="word-bank" id="p-bank"></div>
+                <div style="margin-top:20px;">
+                    <button class="action-btn" onclick="resetP()" style="background:#95a5a6;">다시 하기</button>
+                    <button class="action-btn submit-btn" id="p-check-btn" onclick="checkP()">문장 조립 완료</button>
+                </div>
+            </div>
+            <button id="p-finish-btn" class="action-btn next-btn" style="display:none; width:100%; margin-top:20px;" onclick="finishApp()">미션 최종 완수 결과 보기 ➔</button>
+        </div>
+
+        <div id="app-result" style="display:none; text-align:center; background:white; padding:40px; border-radius:15px; border:4px solid #27ae60;">
+            <h2 style="color:#27ae60;">📜 2과 미션 마스터 수료증</h2>
+            <h3 id="resName2"></h3>
+            <p>2단계의 실전 의사소통 응용 게임(15문항)을 훌륭히 마스터하였습니다!</p>
+            <button class="action-btn start-btn" onclick="location.reload()">메인으로 돌아가기</button>
+        </div>
     </div>
 
     <script>
-        let currentStage = 1;
-        let timeLeft = 180; 
-        let timerInterval;
-        const stageTimes = { 1: 180, 2: 300, 3: 420 }; 
+        /* 1단계 데이터: 정확히 15문제 (어휘 다국어 5문항 + 문법 활용 10문항) */
+        const quizData = [
+            {q:"제 취미는 카메라로 멋진 풍경 [ ]이에요.", ans:["사진을 찍는 것", "사진 찍기"], h:"拍照 (사진을 찍다)", v:"chụp ảnh (사진을 찍다)", type:"vocab"},
+            {q:"주말마다 아름다운 산에 올라가는 [ ]을 좋아해요.", ans:["등산"], h:"登山 (등산)", v:"leo núi (등산)", type:"vocab"},
+            {q:"조용한 방에서 재미있는 책을 읽는 [ ]를 자주 해요.", ans:["독서"], h:"读书 (독서)", v:"đọc sách (독서)", type:"vocab"},
+            {q:"부엌에서 맛있는 음식을 만드는 [ ]가 제 취미예요.", ans:["요리"], h:"做饭 (요리)", v:"nấu ăn (요리)", type:"vocab"},
+            {q:"스케치북과 연필을 가지고 아름다운 [ ]을/를 그려요.", ans:["그림"], h:"画 (그림)", v:"tranh (그림)", type:"vocab"},
+            {q:"저는 매일 저녁에 음악을 (듣다) [ ] 좋아해요.", ans:["듣는 것을", "듣는 것"], type:"grammar"},
+            {q:"제 취미는 한강 공원에서 자전거를 (타다) [ ]이에요.", ans:["타는 것"], type:"grammar"},
+            {q:"주말에 아무것도 안 하고 집에서 (쉬다) [ ]이 제일 편해요.", ans:["쉬는 것"], type:"grammar"},
+            {q:"외국인 친구에게 한국어를 (가르치다) [ ]은/는 보람차요.", ans:["가르치는 것"], type:"grammar"},
+            {q:"친구와 함께 컴퓨터 게임을 (하다) [ ]이 너무 신나요.", ans:["하는 것"], type:"grammar"},
+            {q:"저는 자동차 면허가 없어서 운전을 할 [ ] (모르다/현재형).", ans:["줄 몰라요", "줄 모릅니다"], type:"grammar"},
+            {q:"어릴 때 피아노를 배워서 피아노를 칠 [ ] (알다/현재형).", ans:["줄 알아요", "줄 압니다"], type:"grammar"},
+            {q:"수미 씨는 베트남 음식을 만들 [ ] (알다/현재형/의문형)?", ans:["줄 알아요", "줄 아십니까"], type:"grammar"},
+            {q:"이 취미는 돈이 많이 들(다) [ ] 부담이 없어요.", ans:["지 않아서", "지 않아"], type:"grammar"},
+            {q:"요즘은 너무 바빠서 주말에 취미 생활을 하(다) [ ].", ans:["지 못해요", "지 않아요", "지 못합니다", "지 않습니다"], type:"grammar"}
+        ];
 
-        function updateTimerDisplay() {
-            let m = Math.floor(timeLeft / 60);
-            let s = timeLeft % 60;
-            document.getElementById('timerDisplay').innerText = `남은 시간: ${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}`;
-        }
-
-        function startTimer() {
-            clearInterval(timerInterval);
-            updateTimerDisplay();
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay();
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    alert(`시간이 초과되었습니다! 자동으로 ${currentStage}단계 채점을 진행합니다.`);
-                    checkAnswers(currentStage);
-                }
-            }, 1000);
-        }
-
-        function checkAnswers(stage) {
-            clearInterval(timerInterval); 
-            let score = 0;
-            const inputs = document.querySelectorAll(`.q${stage}-input`);
-            const answerDisplays = document.querySelectorAll(`#stage${stage} .correct-answer`);
+        /* 1단계 실행 및 채점 로직 */
+        let currentBasicScore = 0;
+        function startModule(m) { document.getElementById('main-menu').style.display='none'; document.getElementById('module-'+m).style.display='block'; }
+        function runBasic() { if(!document.getElementById('userName1').value.trim()) return alert("이름을 입력하세요."); document.getElementById('basic-start').style.display='none'; loadBasicStage(); }
+        
+        function loadBasicStage() {
+            let html = `<div class="stage-container" style="display:block">
+                <div class="stage-title">📝 1단계: 기본 핵심 체크 (어휘 및 문법 15문항)</div>
+                <div id="q-box"></div>
+                <div style="text-align:center; margin-top:20px;">
+                    <button class="action-btn submit-btn" onclick="checkBasic()">제출 및 채점하기</button>
+                    <button id="n-btn" class="action-btn next-btn" style="display:none" onclick="finishBasic()">결과 리포트 보기 ➔</button>
+                </div>
+            </div>`;
+            document.getElementById('basic-stage-area').innerHTML = html;
             
-            inputs.forEach((input, index) => {
-                input.disabled = true; 
-                let userAnswer = input.value.replace(/\s+/g, '').trim(); 
-                let correctAnswer = input.getAttribute('data-answer').replace(/\s+/g, '').trim();
-                
-                // 3단계 복수 정답 처리 (해야 해요 / 해야 돼요 등)
-                let isCorrect = false;
-                if (userAnswer === correctAnswer) isCorrect = true;
-                if (stage === 3 && index === 1 && (userAnswer === "해야돼요" || userAnswer === "해야합니다")) isCorrect = true;
-                if (stage === 3 && index === 4 && (userAnswer === "쉬어야돼요" || userAnswer === "쉬어야합니다")) isCorrect = true;
-
-                if (isCorrect) {
-                    score++;
-                    input.style.backgroundColor = '#d4edda';
-                    input.style.borderColor = '#28a745';
-                } else {
-                    input.style.backgroundColor = '#f8d7da';
-                    input.style.borderColor = '#dc3545';
-                    answerDisplays[index].style.display = 'block';
-                }
+            quizData.forEach((d, i) => {
+                let qText = d.type === "vocab" ? `<span class="lang-hint"><span>[CN]</span> ${d.h} | <span>[VN]</span> ${d.v}</span>${i+1}. ${d.q}` : `${i+1}. ${d.q}`;
+                document.getElementById('q-box').innerHTML += `<div class="question-item">${qText}<br><input type="text" id="ans-${i}" autocomplete="off"><div id="c-ans-${i}" class="correct-answer">정답 예시: ${d.ans[0]}</div></div>`;
             });
-
-            const fb = document.getElementById(`feedback${stage}`);
-            fb.innerText = `[${stage}단계 결과] 5문제 중 ${score}문제 정답!`;
-            fb.style.display = 'block';
-            
-            document.querySelector(`#stage${stage} .submit-btn`).style.display = 'none';
-            document.getElementById(`next${stage}`).style.display = 'block';
+            window.scrollTo(0,0);
         }
 
-        function nextStage(next) {
-            document.getElementById(`stage${currentStage}`).style.display = 'none';
-            currentStage = next;
-            document.getElementById(`stage${currentStage}`).style.display = 'block';
-            
-            let stageName = next === 2 ? "2단계 (문법 적용)" : "3단계 (심화 쓰기)";
-            document.getElementById('stageIndicator').innerText = `현재 단계: ${stageName}`;
-            
-            timeLeft = stageTimes[next];
-            startTimer();
-            window.scrollTo(0, 0);
+        function checkBasic() {
+            let score = 0;
+            quizData.forEach((d, i) => {
+                let inp = document.getElementById(`ans-${i}`);
+                let u = inp.value.trim().replace(/\s/g,''); // 공백 제거 처리
+                let isC = d.ans.some(a => u === a.replace(/\s/g,''));
+                
+                // 복수 표현 보정 로직
+                if(!isC) {
+                    let maps = {"사진찍는것":"사진을찍는것", "사진을찍는것":"사진찍는것", "듣는것":"듣는것을", "듣는것을":"듣는것"};
+                    if(maps[u]) isC = d.ans.some(a => a.replace(/\s/g,'') === maps[u]);
+                }
+                
+                if(isC) { inp.style.backgroundColor='#d4edda'; score++; }
+                else { inp.style.backgroundColor='#f8d7da'; document.getElementById(`c-ans-${i}`).style.display='block'; }
+                inp.disabled = true;
+            });
+            currentBasicScore = score;
+            document.getElementById('n-btn').style.display='inline-block';
+            document.querySelector('.submit-btn').style.display='none';
         }
 
-        function finishQuiz() {
-            window.location.href = "index.html"; 
+        function finishBasic() {
+            document.getElementById('basic-stage-area').style.display='none';
+            document.getElementById('basic-result').style.display='block';
+            document.getElementById('resName1').innerText = document.getElementById('userName1').value;
+            let pct = Math.round((currentBasicScore / 15) * 100);
+            document.getElementById('basic-report-body').innerHTML = `<tr><td>1단계: 어휘 및 문법 종합</td><td>${currentBasicScore} / 15개</td><td>${pct}점</td></tr>`;
+            document.getElementById('totalScore1').innerText = currentBasicScore;
         }
 
-        window.onload = startTimer;
+        /* 2단계: 응용 미션 로직 (정확히 총 15문항으로 구성) */
+        let appUser = "";
+        function runApp() { appUser = document.getElementById('userName2').value; if(!appUser) return alert("이름을 입력하세요."); document.getElementById('app-start').style.display='none'; nextMission(1); }
+        
+        function nextMission(s) {
+            document.querySelectorAll('#module-app .stage-container').forEach(e=>e.style.display='none');
+            document.getElementById('app-s'+s).style.display='block';
+            if(s===1) initOx();
+            else if(s===2) initChat();
+            else if(s===3) initPuzzle();
+        }
+
+        /* 미션 1: OX (5문항) */
+        let oxData = [
+            {q:"'-는 것'은 동사를 명사처럼 다룰 때 사용하는 어미 구조이다.", a:"O"},
+            {q:"자전거를 조작할 능력이 있을 때 '자전거를 탈 줄 알아요'라고 한다.", a:"O"},
+            {q:"낚시 활동이 싫다면 '낚시를 좋아하지 않아요'라고 부정할 수 있다.", a:"O"},
+            {q:"책을 즐겨 읽는 취미 활동을 한국어로 '요리'라고 정의한다.", a:"X"},
+            {q:"'수영을 할 줄 몰라요'는 수영을 완벽하게 할 수 있다는 의미이다.", a:"X"}
+        ];
+        let oxIdx = 0;
+        function initOx() { oxIdx=0; showOx(); }
+        function showOx() {
+            if(oxIdx >= oxData.length) {
+                document.getElementById('ox-q-text').innerText = "🎉 미션 1 완수! 다음 대화 게임으로 넘어가세요.";
+                document.getElementById('ox-btns').style.display = 'none';
+                document.getElementById('ox-finish-btn').style.display = 'block';
+                return;
+            }
+            document.getElementById('ox-q-text').innerText = `[Q ${oxIdx+1}/5] ${oxData[oxIdx].q}`;
+        }
+        function checkOx(ans) {
+            if(oxData[oxIdx].a === ans) { oxIdx++; showOx(); }
+            else alert("틀렸습니다. 문장을 다시 한 번 천천히 읽어보세요!");
+        }
+
+        /* 미션 2: Chat 메신저 (5문항) */
+        let chatSteps = [
+            {npc: "흐엉 씨, 주말에 보통 뭐 하면서 시간을 보내요?", opts: ["저는 집에서 조용히 독서하는 것을 좋아해요.", "저는 등산하지 않아요."], correct: 0},
+            {npc: "우와, 책 읽기가 취미군요! 한국어 책도 자주 읽어요?", opts: ["네, 가끔 읽는데 사전이 있으면 읽을 줄 알아요.", "네, 테니스를 칠 줄 알아요."], correct: 0},
+            {npc: "한국어 독서라니 대단해요! 내용이 너무 어렵지 않아요?", opts: ["그림이 많아서 생각보다 아주 어렵지 않아요.", "음악을 듣는 것은 참 재미있어요."], correct: 0},
+            {npc: "그렇군요. 혹시 운동하는 것도 좋아하세요?", opts: ["운동은 별로 좋아하지 않아서 보통 안 해요.", "요리하는 것을 좋아하지 않아요."], correct: 0},
+            {npc: "주말에 집에서 쉬는 게 최고죠! 그럼 이번 주말엔 뭐 할 거예요?", opts: ["이번에도 집에서 소설책을 읽는 것을 하려고 해요.", "등산하러 산에 갈 줄 알아요."], correct: 0}
+        ];
+        let chatIdx = 0;
+        function initChat() { chatIdx = 0; document.getElementById('chat-hist').innerHTML = ""; showChatStep(); }
+        function showChatStep() {
+            if(chatIdx >= chatSteps.length) {
+                document.getElementById('chat-opts').innerHTML = "<p style='text-align:center; color:#27ae60; font-weight:bold;'>🎉 미션 2 완수! 대화 소통 성공.</p>";
+                document.getElementById('chat-finish-btn').style.display = 'block';
+                return;
+            }
+            let step = chatSteps[chatIdx];
+            addBubble(`[대화 ${chatIdx+1}/5] ` + step.npc, 'npc');
+            let optBox = document.getElementById('chat-opts');
+            optBox.innerHTML = "";
+            step.opts.forEach((o, i) => {
+                let btn = document.createElement('button'); btn.className = "choice-btn"; btn.innerText = o; btn.onclick = () => selectChat(i);
+                optBox.appendChild(btn);
+            });
+        }
+        function selectChat(idx) {
+            let step = chatSteps[chatIdx];
+            if(idx === step.correct) {
+                addBubble(step.opts[idx], 'user'); chatIdx++; setTimeout(showChatStep, 800);
+            } else { alert("상대방이 고개를 갸웃거립니다. 자연스러운 흐름을 고르세요!"); }
+        }
+        function addBubble(txt, type) {
+            let b = document.createElement('div'); b.className = `chat-bubble ${type}-bubble`; b.innerText = txt;
+            let hist = document.getElementById('chat-hist'); hist.appendChild(b); hist.scrollTop = hist.scrollHeight;
+        }
+
+        /* 미션 3: 문장 퍼즐 조립 (5문항) */
+        let puzzleData = [
+            {h:"음악을 들을 때 기분이 좋다는 표현입니다.", words:["저는", "음악을", "듣는", "것을", "좋아해요."], ans:"저는 음악을 듣는 것을 좋아해요."},
+            {h:"상대방에게 피아노 연주 능력이 있는지 질문합니다.", words:["피아노를", "칠", "줄", "알아요?"], ans:"피아노를 칠 줄 알아요?"},
+            {h:"자신의 취미가 사진 촬영임을 명시합니다.", words:["제", "취미는", "사진을", "찍는", "것이에요."], ans:"제 취미는 사진을 찍는 것이에요."},
+            {h:"음식이 자극적이거나 매운맛이 없다고 설명합니다.", words:["이", "요리는", "전혀", "맵지", "않아요."], ans:"이 요리는 전혀 맵지 않아요."},
+            {h:"자전거를 운전하거나 다룰 능력이 없음을 나타냅니다.", words:["자전거를", "탈", "줄", "몰라요."], ans:"자전거를 탈 줄 몰라요."}
+        ];
+        let pIdx = 0;
+        function initPuzzle() { pIdx = 0; loadPuzzle(); }
+        function loadPuzzle() {
+            if(pIdx >= puzzleData.length) {
+                document.getElementById('p-zone').innerHTML = "🎉 미션 3 완수! 모든 퍼즐 정렬 성공.";
+                document.getElementById('p-bank').style.display = 'none'; document.getElementById('p-check-btn').style.display = 'none';
+                document.getElementById('p-finish-btn').style.display = 'block'; return;
+            }
+            document.getElementById('puzzle-hint').innerText = `[퍼즐 ${pIdx+1}/5] 힌트: ` + puzzleData[pIdx].h;
+            document.getElementById('p-zone').innerHTML = "";
+            let bank = document.getElementById('p-bank'); bank.innerHTML = "";
+            let shuffled = [...puzzleData[pIdx].words].sort(() => Math.random() - 0.5);
+            shuffled.forEach(w => {
+                let b = document.createElement('div'); b.className = "word-block"; b.innerText = w; b.onclick = () => moveWord(b);
+                bank.appendChild(b);
+            });
+        }
+        function moveWord(el) {
+            if(el.parentElement.id === "p-bank") document.getElementById('p-zone').appendChild(el);
+            else document.getElementById('p-bank').appendChild(el);
+        }
+        function resetP() { loadPuzzle(); }
+        function checkP() {
+            let userSent = Array.from(document.getElementById('p-zone').children).map(c => c.innerText).join(" ");
+            if(userSent === puzzleData[pIdx].ans) { alert("정답입니다! 완벽한 문장입니다."); pIdx++; loadPuzzle(); }
+            else { alert("문장 성분의 어순이 올바르지 않습니다. 다시 배열해 보세요!"); }
+        }
+
+        function finishApp() { document.getElementById('app-s3').style.display='none'; document.getElementById('app-result').style.display='block'; document.getElementById('resName2').innerText = appUser + " 학생,"; }
     </script>
 </body>
 </html>
