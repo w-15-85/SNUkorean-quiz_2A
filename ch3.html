@@ -1,175 +1,1749 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" translate="no">
 <head>
     <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>서울대 한국어 2A - 3과 연습</title>
+    <title>서울대 한국어 2A - 3과 마스터 퀴즈</title>
     <style>
-        body { font-family: 'Malgun Gothic', sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; background-color: #f9f9f9; }
-        h1 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .info-box { background: #e8f4f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #3498db; }
-        .timer { color: #e74c3c; font-size: 1.3em; font-weight: bold; }
-        .stage-container { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .stage-title { color: #fff; background-color: #2c3e50; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 1.2em; text-align: center;}
-        
-        .grammar-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin-bottom: 20px; border-radius: 5px; color: #856404; }
-        .grammar-box h3 { margin: 0 0 10px 0; font-size: 1.1em; color: #664d03; }
-        .grammar-box ul { margin: 0; padding-left: 20px; font-weight: normal; }
-        .grammar-box li { margin-bottom: 5px; }
-
-        .question-item { margin-bottom: 20px; font-size: 1.1em; }
-        .dialogue { background: #f1f2f6; padding: 15px; border-radius: 5px; }
-        select { padding: 5px; font-size: 1em; border-radius: 4px; border: 1px solid #bdc3c7; }
-        input[type="text"] { border: 1px solid #bdc3c7; border-radius: 4px; padding: 5px; font-size: 1em; width: 150px; }
-        .action-btn { display: block; width: 100%; padding: 15px; color: white; border: none; border-radius: 8px; font-size: 1.2em; cursor: pointer; margin-top: 20px; font-weight: bold; }
-        .submit-btn { background: #27ae60; }
-        .submit-btn:hover { background: #2ecc71; }
-        .next-btn { background: #e67e22; display: none; }
-        .next-btn:hover { background: #d35400; }
-        .correct-answer { color: #e74c3c; font-size: 0.9em; display: none; margin-top: 5px; font-weight: bold; }
-        .feedback { text-align: center; font-size: 1.2em; font-weight: bold; color: #2980b9; margin-top: 10px; display: none; }
+        :root {
+            --main: #27ae60;
+            --dark: #2c3e50;
+            --blue: #2980b9;
+            --orange: #e67e22;
+            --red: #e74c3c;
+            --gray: #95a5a6;
+            --soft: #f4f7f6;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 920px;
+            margin: 0 auto;
+            background-color: var(--soft);
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: var(--dark);
+            border-bottom: 3px solid var(--main);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #4b5f6b;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        .action-btn {
+            padding: 12px 24px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+            margin: 5px;
+        }
+        .start-btn { background: var(--main); }
+        .next-btn { background: var(--orange); }
+        .submit-btn { background: var(--blue); }
+        .back-btn { background: var(--gray); }
+        .action-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .action-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+        #main-menu { text-align: center; margin-top: 35px; }
+        .menu-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: 0.3s;
+        }
+        .menu-card:hover { border-color: var(--main); transform: translateY(-3px); }
+        .menu-card h2 { color: var(--main); margin-top: 0; }
+        .menu-card .count { color: var(--dark); font-weight: bold; }
+        .stage-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: none;
+        }
+        .stage-title {
+            background-color: var(--dark);
+            color: #fff;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .stage-guide {
+            background: #eef7f2;
+            border: 1px solid #cdebd9;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 25px;
+            color: #265b3d;
+            font-weight: bold;
+        }
+        .question-item {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ddd;
+            font-size: 1.05em;
+        }
+        .question-text {
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        .hint-box {
+            background: #f9f9f9;
+            border-left: 4px solid var(--main);
+            padding: 10px 15px;
+            margin: 10px 0 12px;
+            font-size: 0.9em;
+            border-radius: 0 6px 6px 0;
+        }
+        .hint-line { margin: 3px 0; display: flex; gap: 8px; }
+        .hint-tag { font-weight: bold; min-width: 120px; color: #16a085; }
+        .options-group { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .option-label {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid #e8ecef;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+        .option-label:hover { background: #eef7f2; }
+        input[type="radio"] { width: 18px; height: 18px; accent-color: var(--main); }
+        input[type="text"].write-input {
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            padding: 9px 14px;
+            font-size: 1em;
+            width: min(310px, 100%);
+            outline: none;
+            font-weight: bold;
+            color: var(--blue);
+            text-align: center;
+            margin-top: 10px;
+        }
+        input[type="text"].write-input:focus { border-color: var(--main); box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.12); }
+        .feedback-msg { margin-top: 8px; font-size: 0.92em; font-weight: bold; display: none; }
+        .feedback-correct { color: var(--main); }
+        .feedback-wrong { color: var(--red); }
+        .progress-pill {
+            display: inline-block;
+            background: #ecf0f1;
+            color: var(--dark);
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .ox-game-board { text-align: center; padding: 20px; }
+        .ox-question {
+            font-size: 1.25em;
+            font-weight: bold;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e8f4f8;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            padding: 22px;
+            color: var(--dark);
+            border: 1px solid #d0e4ee;
+        }
+        .ox-btn {
+            width: 90px;
+            height: 90px;
+            font-size: 2.2em;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            color: white;
+            margin: 0 20px;
+            transition: 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .btn-o { background: #3498db; }
+        .btn-x { background: var(--red); }
+        .ox-btn:hover { transform: scale(1.05); }
+        .chat-container {
+            background: #abc1d1;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 560px;
+            margin: 0 auto;
+            height: 520px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.15);
+        }
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 5px;
+        }
+        .chat-bubble {
+            max-width: 82%;
+            padding: 11px 15px;
+            border-radius: 15px;
+            font-size: 0.95em;
+            line-height: 1.45;
+            font-weight: bold;
+            white-space: pre-wrap;
+        }
+        .npc-bubble { background: #fff; align-self: flex-start; border-top-left-radius: 0; color: #333; }
+        .user-bubble { background: #ffeb33; align-self: flex-end; border-top-right-radius: 0; color: #000; }
+        .chat-choices { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; }
+        .choice-btn {
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: bold;
+            color: #333;
+            transition: 0.2s;
+        }
+        .choice-btn:hover { background: #fffde7; }
+        .drop-zone {
+            min-height: 75px;
+            border: 2px dashed var(--main);
+            background: #fafafa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            padding: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+        }
+        .word-block {
+            background: var(--main);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            user-select: none;
+        }
+        .word-block:hover { opacity: 0.9; transform: translateY(-1px); }
+        .report-table { width: 100%; border-collapse: collapse; margin: 25px 0; background: white; }
+        .report-table th, .report-table td { border: 1px solid #ddd; padding: 14px; text-align: center; font-size: 1.02em; }
+        .report-table th { background: var(--dark); color: white; }
+        .report-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .total-score-box {
+            font-size: 1.55em;
+            color: var(--red);
+            font-weight: bold;
+            margin: 25px 0;
+            text-align: center;
+            background: #fdf2f2;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #f9d5d5;
+        }
+        .small-note {
+            text-align: center;
+            color: #607d8b;
+            font-size: 0.92em;
+            margin-top: 18px;
+        }
+        @media (max-width: 640px) {
+            body { padding: 12px; }
+            .stage-container { padding: 18px; }
+            .hint-line { flex-direction: column; gap: 0; }
+            .hint-tag { min-width: auto; }
+            .ox-btn { width: 76px; height: 76px; font-size: 1.9em; margin: 0 10px; }
+            .chat-container { height: 540px; padding: 14px; }
+            .report-table th, .report-table td { padding: 9px; font-size: 0.9em; }
+        }
     </style>
 </head>
 <body>
+    <h1>🌿 서울대 한국어 2A - 3과 마스터 퀴즈</h1>
+    <div class="subtitle">콘서트에 가 봤어요? · 경험 · 기간 · 문화생활<br><span style="color:#e67e22;">각 단계 70% 이상 정답 시 다음 단계로 이동할 수 있습니다.</span></div>
 
-    <h1>📝 3과: 취미와 활동</h1>
-    
-    <div class="info-box">
-        <div id="stageIndicator">현재 단계: 1단계 (워밍업)</div>
-        <div class="timer" id="timerDisplay">남은 시간: 03:00</div>
+    <div id="main-menu">
+        <div class="menu-card" onclick="openModule('basic')">
+            <h2>📝 1단계: 기본 핵심 체크</h2>
+            <p>세부 3단계 구성: 어휘 선택형 15문항 ➔ 문법 대화 선택형 15문항 ➔ 직접 작성형 15문항</p><p><strong>통과 기준:</strong> 각 세부 단계 11문항 이상 정답</p>
+            <p class="count">총 45문항</p>
+        </div>
+        <div class="menu-card" onclick="openModule('app')">
+            <h2>🎮 2단계: 응용 미션 게임</h2>
+            <p>스피드 O/X 10문항 ➔ 톡톡 메신저 10턴 ➔ 문장 퍼즐 10문항</p><p><strong>통과 기준:</strong> 각 미션 7문항 이상 정답</p>
+            <p class="count">총 30문항</p>
+        </div>
     </div>
 
-    <div id="stage1" class="stage-container">
-        <div class="stage-title">🌱 1단계: 워밍업 (기본 형태 연습) - 3분</div>
-        <p>※ 빈칸에 알맞은 형태를 고르세요.</p>
-        <div class="question-item"><div class="dialogue">1. 저는 혼자 <select class="q1-input" data-answer="걷는 것을"><option value="">선택</option><option value="걷는 것을">걷는 것을</option><option value="걷을 것을">걷을 것을</option></select> 좋아해요.</div><div class="correct-answer">정답: 걷는 것을</div></div>
-        <div class="question-item"><div class="dialogue">2. 마이클 씨는 수영을 <select class="q1-input" data-answer="할 줄 알아요"><option value="">선택</option><option value="할 줄 알아요">할 줄 알아요</option><option value="하는 줄 알아요">하는 줄 알아요</option></select>.</div><div class="correct-answer">정답: 할 줄 알아요</div></div>
-        <div class="question-item"><div class="dialogue">3. 어제 <select class="q1-input" data-answer="본"><option value="">선택</option><option value="본">본</option><option value="보는">보는</option></select> 영화가 정말 재미있었어요.</div><div class="correct-answer">정답: 본</div></div>
-        <div class="question-item"><div class="dialogue">4. 저는 매운 음식을 잘 <select class="q1-input" data-answer="먹는 편이에요"><option value="">선택</option><option value="먹는 편이에요">먹는 편이에요</option><option value="먹은 편이에요">먹은 편이에요</option></select>.</div><div class="correct-answer">정답: 먹는 편이에요</div></div>
-        <div class="question-item"><div class="dialogue">5. 한자를 <select class="q1-input" data-answer="읽을 줄 몰라요"><option value="">선택</option><option value="읽을 줄 몰라요">읽을 줄 몰라요</option><option value="읽는 줄 몰라요">읽는 줄 몰라요</option></select>.</div><div class="correct-answer">정답: 읽을 줄 몰라요</div></div>
-        
-        <div class="feedback" id="feedback1"></div>
-        <button class="action-btn submit-btn" onclick="checkAnswers(1)">1단계 정답 확인</button>
-        <button class="action-btn next-btn" id="next1" onclick="nextStage(2)">2단계로 이동하기 ➔</button>
-    </div>
-
-    <div id="stage2" class="stage-container" style="display: none;">
-        <div class="stage-title">🌿 2단계: 문법 적용 (대화문 완성) - 5분</div>
-        <p>※ 대화를 읽고 빈칸에 알맞은 말을 고르세요.</p>
-        <div class="question-item"><div class="dialogue">1. 가: 어떤 과일을 좋아해요?<br>나: 저는 딸기처럼 단 <select class="q2-input" data-answer="과일을 좋아하는 편이에요"><option value="">선택</option><option value="과일을 좋아하는 편이에요">과일을 좋아하는 편이에요.</option><option value="과일을 좋아한 편이에요">과일을 좋아한 편이에요.</option></select></div><div class="correct-answer">정답: 과일을 좋아하는 편이에요.</div></div>
-        <div class="question-item"><div class="dialogue">2. 가: 혹시 불고기 <select class="q2-input" data-answer="만들 줄 알아요"><option value="">선택</option><option value="만들 줄 알아요">만들 줄 알아요?</option><option value="만드는 줄 알아요">만드는 줄 알아요?</option></select><br>나: 네, 아주 잘 만들어요.</div><div class="correct-answer">정답: 만들 줄 알아요?</div></div>
-        <div class="question-item"><div class="dialogue">3. 가: 그 책 어때요?<br>나: 제가 최근에 <select class="q2-input" data-answer="읽은 책 중에서"><option value="">선택</option><option value="읽은 책 중에서">읽은 책 중에서</option><option value="읽는 책 중에서">읽는 책 중에서</option></select> 제일 좋아요.</div><div class="correct-answer">정답: 읽은 책 중에서</div></div>
-        <div class="question-item"><div class="dialogue">4. 가: 주말에 보통 뭐 해요?<br>나: 저는 집에서 <select class="q2-input" data-answer="쉬는 것을 좋아해요"><option value="">선택</option><option value="쉬는 것을 좋아해요">쉬는 것을 좋아해요.</option><option value="쉬은 것을 좋아해요">쉬은 것을 좋아해요.</option></select></div><div class="correct-answer">정답: 쉬는 것을 좋아해요.</div></div>
-        <div class="question-item"><div class="dialogue">5. 가: 운전할 수 있어요?<br>나: 아니요, 아직 운전을 <select class="q2-input" data-answer="할 줄 몰라요"><option value="">선택</option><option value="할 줄 몰라요">할 줄 몰라요.</option><option value="하는 줄 몰라요">하는 줄 몰라요.</option></select></div><div class="correct-answer">정답: 할 줄 몰라요.</div></div>
-        
-        <div class="feedback" id="feedback2"></div>
-        <button class="action-btn submit-btn" onclick="checkAnswers(2)">2단계 정답 확인</button>
-        <button class="action-btn next-btn" id="next2" onclick="nextStage(3)">3단계로 이동하기 ➔</button>
-    </div>
-
-    <div id="stage3" class="stage-container" style="display: none;">
-        <div class="stage-title">🌳 3단계: 심화 (직접 쓰기) - 7분</div>
-        
-        <div class="grammar-box">
-            <h3>📌 [참고] 3과 목표 문법</h3>
-            <ul>
-                <li><strong>V-는 것</strong> (동사를 명사처럼 만들 때)</li>
-                <li><strong>V-(으)ㄹ 줄 알다/모르다</strong> (방법이나 능력을 알거나 모를 때)</li>
-                <li><strong>V-(으)ㄴ</strong> (과거에 일어난 일을 명사 앞에서 꾸며줄 때)</li>
-                <li><strong>A-(으)ㄴ/V-는 편이다</strong> (어떤 쪽에 가깝다고 말할 때)</li>
-            </ul>
+    <div id="module-basic" style="display:none;">
+        <div id="basic-stage1" class="stage-container">
+            <div class="stage-title">📝 1단계 - 세부 1단계: 워밍업 (기본 어휘 체크)</div>
+            <div class="stage-guide">3과의 문화생활·경험·기간 관련 어휘를 문장 맥락 속에서 확인합니다. <strong>통과 기준: 11/15 이상</strong></div>
+            <div id="b1-questions"></div>
+            <div style="text-align: center;"><button class="action-btn next-btn" onclick="submitBasic1()">채점 후 다음 단계로 ➔</button></div>
         </div>
 
-        <p>※ 괄호 안의 단어와 위의 목표 문법을 사용하여 대화를 완성하세요. (직접 입력)</p>
-        <div class="question-item"><div class="dialogue">1. 가: 피아노 <input type="text" class="q3-input" data-answer="칠줄알아요">? [치다]<br>나: 네, 어릴 때 배웠어요.</div><div class="correct-answer">정답: 칠 줄 알아요</div></div>
-        <div class="question-item"><div class="dialogue">2. 가: 왜 그 식당에 자주 가요?<br>나: 그 식당이 다른 곳보다 값이 <input type="text" class="q3-input" data-answer="싼편이에요">. [싸다]</div><div class="correct-answer">정답: 싼 편이에요</div></div>
-        <div class="question-item"><div class="dialogue">3. 가: 취미가 뭐예요?<br>나: 저는 사진 <input type="text" class="q3-input" data-answer="찍는것을"> 좋아해요. [찍다]</div><div class="correct-answer">정답: 찍는 것을 (또는 찍는 걸)</div></div>
-        <div class="question-item"><div class="dialogue">4. 가: 아까 <input type="text" class="q3-input" data-answer="먹은"> 음식이 뭐예요? [먹다]<br>나: 김치찌개예요.</div><div class="correct-answer">정답: 먹은</div></div>
-        <div class="question-item"><div class="dialogue">5. 가: 외국어를 잘해요?<br>나: 아니요, 저는 외국어를 잘 <input type="text" class="q3-input" data-answer="못하는편이에요">. [못하다]</div><div class="correct-answer">정답: 못하는 편이에요</div></div>
-        
-        <div class="feedback" id="feedback3"></div>
-        <button class="action-btn submit-btn" onclick="checkAnswers(3)">최종 정답 확인</button>
-        <button class="action-btn next-btn" id="next3" onclick="finishQuiz()" style="background-color: #8e44ad;">🎉 수고하셨습니다 (처음으로)</button>
+        <div id="basic-stage2" class="stage-container">
+            <div class="stage-title">📝 1단계 - 세부 2단계: 문법 적용 (대화문 완성)</div>
+            <div class="stage-guide">V-아/어 보다, N 동안, A-(으)ㄴ데/V-는데/N인데, V-(으)ㄹ N을 대화문에서 적용합니다. <strong>통과 기준: 11/15 이상</strong></div>
+            <div id="b2-questions"></div>
+            <div style="text-align: center;"><button class="action-btn next-btn" onclick="submitBasic2()">채점 후 다음 단계로 ➔</button></div>
+        </div>
+
+        <div id="basic-stage3" class="stage-container">
+            <div class="stage-title">📝 1단계 - 세부 3단계: 심화 완성 (직접 쓰기 과제)</div>
+            <div class="stage-guide">제시어와 목표 문법을 결합하여 해요체 중심의 자연스러운 표현을 직접 입력합니다. <strong>통과 기준: 11/15 이상</strong></div>
+            <div id="b3-questions"></div>
+            <div style="text-align: center;"><button class="action-btn submit-btn" onclick="submitBasic3()">최종 채점 및 성적표 보기 ➔</button></div>
+        </div>
+
+        <div id="basic-report" class="stage-container">
+            <div class="stage-title" style="background:#27ae60;">📊 1단계 최종 성취도 종합 리포트</div>
+            <table class="report-table">
+                <thead><tr><th>학습 평가 항목</th><th>유형</th><th>맞힌 문항 수</th><th>백분율 점수</th></tr></thead>
+                <tbody>
+                    <tr><td>세부 1단계: 워밍업 어휘 기초</td><td>선택형</td><td id="r-b1-count">0 / 15</td><td id="r-b1-pct">0%</td></tr>
+                    <tr><td>세부 2단계: 핵심 문법 대화</td><td>선택형</td><td id="r-b2-count">0 / 15</td><td id="r-b2-pct">0%</td></tr>
+                    <tr><td>세부 3단계: 심화 문장 구성</td><td>직접 작성형</td><td id="r-b3-count">0 / 15</td><td id="r-b3-pct">0%</td></tr>
+                </tbody>
+            </table>
+            <div class="total-score-box">1단계 최종 총점: <span id="r-basic-total">0</span> / <span id="r-basic-denom">45</span> 문항 정답!</div>
+            <button class="action-btn start-btn" onclick="location.reload()" style="display:block; margin:0 auto;">메인으로 이동</button>
+        </div>
     </div>
 
+    <div id="module-app" style="display:none;">
+        <div id="app-stage1" class="stage-container">
+            <div class="stage-title">🎮 2단계 - 미션 1: 스피드 O/X 판별 게임</div>
+            <div class="ox-game-board">
+                <div class="progress-pill" id="ox-progress">Q 1 / 10</div>
+                <div class="ox-question" id="ox-txt">문제를 불러오는 중...</div>
+                <div id="ox-hint"></div>
+                <div id="ox-btn-group">
+                    <button class="ox-btn btn-o" onclick="handleOx('O')">O</button>
+                    <button class="ox-btn btn-x" onclick="handleOx('X')">X</button>
+                </div>
+                <button id="ox-next-move" class="action-btn next-btn" style="display:none; width:100%;" onclick="goToApp2()">미션 2 (톡톡 메신저) 이동 ➔</button>
+            </div>
+        </div>
+
+        <div id="app-stage2" class="stage-container">
+            <div class="stage-title">🎮 2단계 - 미션 2: 톡톡 메신저 인터랙티브 대화</div>
+            <div class="chat-container">
+                <div class="chat-history" id="chat-box"></div>
+                <div id="chat-hint"></div>
+                <div class="chat-choices" id="chat-choice-area"></div>
+            </div>
+            <button id="chat-next-move" class="action-btn next-btn" style="display:none; width:100%;" onclick="goToApp3()">미션 3 (문장 퍼즐) 이동 ➔</button>
+        </div>
+
+        <div id="app-stage3" class="stage-container">
+            <div class="stage-title">🎮 2단계 - 미션 3: 단어 조립 문장 완성 퍼즐</div>
+            <div class="progress-pill" id="puz-progress">Q 1 / 10</div>
+            <p style="text-align:center; font-weight:bold;" id="puz-hint-label"></p>
+            <div id="puz-lang-hint"></div>
+            <div class="drop-zone" id="puzzle-drop"></div>
+            <div class="word-bank" id="puzzle-bank"></div>
+            <div style="text-align:center; margin-top:25px;">
+                <button class="action-btn back-btn" onclick="resetPuzzle()">다시 정렬</button>
+                <button class="action-btn submit-btn" onclick="checkPuzzle()">문장 매칭 검사</button>
+            </div>
+            <button id="puz-next-move" class="action-btn next-btn" style="display:none; width:100%;" onclick="showAppReport()">최종 미션 결과 리포트 출력 ➔</button>
+        </div>
+
+        <div id="app-report" class="stage-container">
+            <div class="stage-title" style="background:#2980b9;">📊 2단계 응용 게임 최종 결과 리포트</div>
+            <table class="report-table">
+                <thead><tr><th>응용 미션 코너</th><th>진행 방식</th><th>맞힌 문항 수</th><th>백분율 점수</th></tr></thead>
+                <tbody>
+                    <tr><td>미션 1: 스피드 O/X 판별</td><td>진위 확인형</td><td id="r-a1-count">0 / 10</td><td id="r-a1-pct">0%</td></tr>
+                    <tr><td>미션 2: 톡톡 메신저 대화</td><td>상황 선택형</td><td id="r-a2-count">0 / 10</td><td id="r-a2-pct">0%</td></tr>
+                    <tr><td>미션 3: 문장 퍼즐 조립</td><td>어순 정렬형</td><td id="r-a3-count">0 / 10</td><td id="r-a3-pct">0%</td></tr>
+                </tbody>
+            </table>
+            <div class="total-score-box">2단계 최종 총점: <span id="r-app-total">0</span> / <span id="r-app-denom">30</span> 문항 정답!</div>
+            <button class="action-btn start-btn" onclick="location.reload()" style="display:block; margin:0 auto;">메인으로 이동</button>
+        </div>
+    </div>
+
+    <div class="small-note">※ 직접 작성형과 퍼즐은 모든 공백을 제거한 뒤 정답과 비교합니다. 각 단계에서 70% 미만이면 해당 단계가 초기화되어 다시 풀어야 합니다.</div>
+
     <script>
-        let currentStage = 1;
-        let timeLeft = 180; 
-        let timerInterval;
-        const stageTimes = { 1: 180, 2: 300, 3: 420 }; 
+        const b1Data = [
+        {
+                "q": "많은 사람들이 가수의 노래를 직접 들으러 가는 공연은 [ ]입니다.",
+                "options": [
+                        "콘서트",
+                        "박물관",
+                        "아르바이트"
+                ],
+                "ans": "콘서트",
+                "en": "concert",
+                "vn": "buổi hòa nhạc",
+                "mn": "тоглолт",
+                "zh": "演唱会"
+        },
+        {
+                "q": "연극이나 뮤지컬, 콘서트를 보는 장소는 [ ]입니다.",
+                "options": [
+                        "공연장",
+                        "놀이공원",
+                        "식당"
+                ],
+                "ans": "공연장",
+                "en": "performance hall / venue",
+                "vn": "nhà hát / địa điểm biểu diễn",
+                "mn": "тоглолтын танхим",
+                "zh": "演出场馆"
+        },
+        {
+                "q": "그림이나 사진, 작품을 모아 놓고 사람들에게 보여 주는 행사는 [ ]입니다.",
+                "options": [
+                        "전시회",
+                        "불꽃놀이",
+                        "배낭여행"
+                ],
+                "ans": "전시회",
+                "en": "exhibition",
+                "vn": "triển lãm",
+                "mn": "үзэсгэлэн",
+                "zh": "展览会"
+        },
+        {
+                "q": "옛날 물건이나 역사 자료를 보고 배울 수 있는 곳은 [ ]입니다.",
+                "options": [
+                        "박물관",
+                        "공연장",
+                        "축제"
+                ],
+                "ans": "박물관",
+                "en": "museum",
+                "vn": "bảo tàng",
+                "mn": "музей",
+                "zh": "博物馆"
+        },
+        {
+                "q": "지역 사람들이 모여 음식, 공연, 놀이를 함께 즐기는 행사는 [ ]입니다.",
+                "options": [
+                        "축제",
+                        "수업",
+                        "숙제"
+                ],
+                "ans": "축제",
+                "en": "festival",
+                "vn": "lễ hội",
+                "mn": "наадам / баяр",
+                "zh": "庆典 / 节日活动"
+        },
+        {
+                "q": "밤하늘에 예쁜 빛과 소리가 크게 나는 행사는 [ ]입니다.",
+                "options": [
+                        "불꽃놀이",
+                        "사물놀이",
+                        "아르바이트"
+                ],
+                "ans": "불꽃놀이",
+                "en": "fireworks",
+                "vn": "pháo hoa",
+                "mn": "салют",
+                "zh": "烟花表演"
+        },
+        {
+                "q": "노래와 춤, 연기를 함께 볼 수 있는 공연은 [ ]입니다.",
+                "options": [
+                        "뮤지컬",
+                        "미술관",
+                        "배낭여행"
+                ],
+                "ans": "뮤지컬",
+                "en": "musical",
+                "vn": "nhạc kịch",
+                "mn": "мюзикл",
+                "zh": "音乐剧"
+        },
+        {
+                "q": "배우들이 무대에서 이야기를 연기하는 공연은 [ ]입니다.",
+                "options": [
+                        "연극",
+                        "콘서트",
+                        "박물관"
+                ],
+                "ans": "연극",
+                "en": "play / theater performance",
+                "vn": "kịch nói",
+                "mn": "жүжиг",
+                "zh": "话剧"
+        },
+        {
+                "q": "큰 가방을 메고 여러 곳을 자유롭게 다니는 여행은 [ ]입니다.",
+                "options": [
+                        "배낭여행",
+                        "전시회",
+                        "불꽃놀이"
+                ],
+                "ans": "배낭여행",
+                "en": "backpacking trip",
+                "vn": "du lịch bụi",
+                "mn": "үүргэвчтэй аялал",
+                "zh": "背包旅行"
+        },
+        {
+                "q": "돈을 벌기 위해 정해진 시간에 하는 일은 [ ]입니다.",
+                "options": [
+                        "아르바이트",
+                        "사물놀이",
+                        "미술관"
+                ],
+                "ans": "아르바이트",
+                "en": "part-time job",
+                "vn": "việc làm thêm",
+                "mn": "цагийн ажил",
+                "zh": "兼职"
+        },
+        {
+                "q": "바다 속에 들어가서 물고기와 산호를 보는 활동은 [ ]입니다.",
+                "options": [
+                        "스쿠버 다이빙",
+                        "번지 점프",
+                        "연극"
+                ],
+                "ans": "스쿠버 다이빙",
+                "en": "scuba diving",
+                "vn": "lặn biển có bình dưỡng khí",
+                "mn": "усанд шумбах",
+                "zh": "水肺潜水"
+        },
+        {
+                "q": "높은 곳에서 줄을 매고 뛰어내리는 활동은 [ ]입니다.",
+                "options": [
+                        "번지 점프",
+                        "뮤지컬",
+                        "박물관"
+                ],
+                "ans": "번지 점프",
+                "en": "bungee jumping",
+                "vn": "nhảy bungee",
+                "mn": "банжи үсрэлт",
+                "zh": "蹦极"
+        },
+        {
+                "q": "꽹과리, 장구, 북, 징으로 연주하는 한국 전통 음악은 [ ]입니다.",
+                "options": [
+                        "사물놀이",
+                        "콘서트",
+                        "전시회"
+                ],
+                "ans": "사물놀이",
+                "en": "samulnori, Korean percussion music",
+                "vn": "samulnori, nhạc gõ truyền thống Hàn Quốc",
+                "mn": "самулнори, солонгос уламжлалт цохивор хөгжим",
+                "zh": "四物乐"
+        },
+        {
+                "q": "‘두 시간 [ ] 기다렸어요’에서 빈칸에 들어갈 기간 표현은 무엇입니까?",
+                "options": [
+                        "동안",
+                        "마다",
+                        "부터"
+                ],
+                "ans": "동안",
+                "en": "for / during",
+                "vn": "trong suốt / trong vòng",
+                "mn": "турш / хугацаанд",
+                "zh": "期间 / 持续"
+        },
+        {
+                "q": "어떤 일을 전에 하지 않았고 이번이 가장 먼저라는 뜻의 말은 [ ]입니다.",
+                "options": [
+                        "처음",
+                        "가끔",
+                        "자주"
+                ],
+                "ans": "처음",
+                "en": "first time",
+                "vn": "lần đầu",
+                "mn": "анх удаа",
+                "zh": "第一次"
+        }
+];
+        const b2Data = [
+        {
+                "q": "가: 한국에서 콘서트에 간 적이 있어요?<br>나: 네, 작년에 K-pop 콘서트에 [ ].",
+                "options": [
+                        "가 봤어요",
+                        "가고 있어요",
+                        "가 보세요"
+                ],
+                "ans": "가 봤어요",
+                "en": "I have been to a concert.",
+                "vn": "Tôi đã từng đi xem hòa nhạc.",
+                "mn": "Би тоглолт үзэж байсан.",
+                "zh": "我去看过演唱会。"
+        },
+        {
+                "q": "가: 김치를 직접 만든 적이 있어요?<br>나: 네, 친구 집에서 김치를 [ ].",
+                "options": [
+                        "만들어 봤어요",
+                        "만들고 봤어요",
+                        "만드는 봤어요"
+                ],
+                "ans": "만들어 봤어요",
+                "en": "I have tried making kimchi.",
+                "vn": "Tôi đã thử làm kimchi.",
+                "mn": "Би кимчи хийж үзсэн.",
+                "zh": "我做过泡菜。"
+        },
+        {
+                "q": "가: 한국어를 얼마나 공부했어요?<br>나: [ ] 공부했어요.",
+                "options": [
+                        "한 달 동안",
+                        "한 달마다",
+                        "한 달부터"
+                ],
+                "ans": "한 달 동안",
+                "en": "I studied for one month.",
+                "vn": "Tôi đã học trong một tháng.",
+                "mn": "Би нэг сарын турш сурсан.",
+                "zh": "我学了一个月。"
+        },
+        {
+                "q": "가: 공연장 앞에서 얼마나 기다렸어요?<br>나: 사람이 많아서 [ ] 기다렸어요.",
+                "options": [
+                        "두 시간 동안",
+                        "두 시간마다",
+                        "두 시간부터"
+                ],
+                "ans": "두 시간 동안",
+                "en": "I waited for two hours.",
+                "vn": "Tôi đã chờ trong hai tiếng.",
+                "mn": "Би хоёр цаг хүлээсэн.",
+                "zh": "我等了两个小时。"
+        },
+        {
+                "q": "가: 오늘 저녁에 바빠요?<br>나: 아니요, 시간이 [ ] 같이 전시회에 갈래요?",
+                "options": [
+                        "있는데",
+                        "있어서요",
+                        "있지만요"
+                ],
+                "ans": "있는데",
+                "en": "I have time, so shall we go to an exhibition together?",
+                "vn": "Tôi có thời gian, chúng ta đi triển lãm cùng nhau nhé?",
+                "mn": "Надад цаг байгаа, хамт үзэсгэлэн үзэх үү?",
+                "zh": "我有时间，一起去看展览吗？"
+        },
+        {
+                "q": "가: 그 공연 어땠어요?<br>나: 공연은 재미있[ ] 사람이 너무 많았어요.",
+                "options": [
+                        "는데",
+                        "는 것",
+                        "을"
+                ],
+                "ans": "는데",
+                "en": "The performance was interesting, but there were too many people.",
+                "vn": "Buổi biểu diễn thú vị, nhưng người quá đông.",
+                "mn": "Тоглолт сонирхолтой байсан ч хүн их байсан.",
+                "zh": "演出很有意思，但是人太多了。"
+        },
+        {
+                "q": "가: 민수 씨는 회사원이에요?<br>나: 아니요, 학생[ ] 아르바이트도 해요.",
+                "options": [
+                        "인데",
+                        "동안",
+                        "아/어 봤어요"
+                ],
+                "ans": "인데",
+                "en": "I am a student, and I also do a part-time job.",
+                "vn": "Tôi là sinh viên và cũng đi làm thêm.",
+                "mn": "Би оюутан, бас цагийн ажил хийдэг.",
+                "zh": "我是学生，也做兼职。"
+        },
+        {
+                "q": "가: 이건 뭐예요?<br>나: 친구에게 [ ] 선물이에요.",
+                "options": [
+                        "줄",
+                        "주고",
+                        "주는데"
+                ],
+                "ans": "줄",
+                "en": "It is a gift to give to a friend.",
+                "vn": "Đây là món quà để tặng bạn.",
+                "mn": "Энэ бол найздаа өгөх бэлэг.",
+                "zh": "这是要送给朋友的礼物。"
+        },
+        {
+                "q": "가: 내일 계획이 있어요?<br>나: 네, 내일 [ ] 영화가 있어요.",
+                "options": [
+                        "볼",
+                        "보고",
+                        "봤어요"
+                ],
+                "ans": "볼",
+                "en": "There is a movie I will watch tomorrow.",
+                "vn": "Ngày mai tôi có bộ phim sẽ xem.",
+                "mn": "Маргааш үзэх кино байна.",
+                "zh": "明天有要看的电影。"
+        },
+        {
+                "q": "가: 이 음식이 맛있어 보여요.<br>나: 그럼 한번 [ ]?",
+                "options": [
+                        "먹어 볼래요",
+                        "먹고 있어요",
+                        "먹은 동안"
+                ],
+                "ans": "먹어 볼래요",
+                "en": "Would you like to try eating it?",
+                "vn": "Bạn muốn ăn thử không?",
+                "mn": "Идэж үзэх үү?",
+                "zh": "要不要尝一尝？"
+        },
+        {
+                "q": "가: 한국에서 살아 본 적이 있어요?<br>나: 네, 작년에 서울에서 [ ].",
+                "options": [
+                        "살아 봤어요",
+                        "살고 봤어요",
+                        "사는 동안 봤어요"
+                ],
+                "ans": "살아 봤어요",
+                "en": "I have lived in Seoul.",
+                "vn": "Tôi đã từng sống ở Seoul.",
+                "mn": "Би Сөүлд амьдарч үзсэн.",
+                "zh": "我在首尔生活过。"
+        },
+        {
+                "q": "가: 방학 때 무엇을 했어요?<br>나: 카페에서 [ ] 아르바이트했어요.",
+                "options": [
+                        "일주일 동안",
+                        "일주일마다",
+                        "일주일인데"
+                ],
+                "ans": "일주일 동안",
+                "en": "I worked part-time for one week.",
+                "vn": "Tôi đã làm thêm trong một tuần.",
+                "mn": "Би нэг долоо хоног цагийн ажил хийсэн.",
+                "zh": "我做了一周兼职。"
+        },
+        {
+                "q": "가: 뮤지컬을 보러 갈 거예요?<br>나: 보고 싶[ ] 표가 없어요.",
+                "options": [
+                        "은데",
+                        "는데",
+                        "을"
+                ],
+                "ans": "은데",
+                "en": "I want to see it, but there are no tickets.",
+                "vn": "Tôi muốn xem, nhưng không có vé.",
+                "mn": "Үзмээр байгаа ч тасалбар байхгүй.",
+                "zh": "我想看，但是没有票。"
+        },
+        {
+                "q": "가: 이 안내문은 뭐예요?<br>나: 이번 주말에 [ ] 축제 안내문이에요.",
+                "options": [
+                        "갈",
+                        "가고",
+                        "가 봤어요"
+                ],
+                "ans": "갈",
+                "en": "It is information about the festival we will go to this weekend.",
+                "vn": "Đó là thông báo về lễ hội sẽ đi cuối tuần này.",
+                "mn": "Энэ амралтын өдрөөр очих наадмын мэдээлэл.",
+                "zh": "这是这个周末要去的庆典介绍。"
+        },
+        {
+                "q": "가: 표 값이 어때요?<br>나: 표가 좀 [ ] 공연은 정말 좋아요.",
+                "options": [
+                        "비싼데",
+                        "비싸는데",
+                        "비쌀 동안"
+                ],
+                "ans": "비싼데",
+                "en": "The ticket is a little expensive, but the performance is really good.",
+                "vn": "Vé hơi đắt nhưng buổi biểu diễn rất hay.",
+                "mn": "Тасалбар жаахан үнэтэй ч тоглолт үнэхээр сайхан.",
+                "zh": "票有点贵，但是演出真的很好。"
+        }
+];
+        const b3Data = [
+        {
+                "q": "가: 한국에서 콘서트에 간 적이 있어요?<br>나: 네, 지난달에 콘서트에 (가다) _______.",
+                "item": "콘서트에",
+                "hintWord": "가다 + -아/어 보다",
+                "ans": [
+                        "가봤어요",
+                        "가봤습니다"
+                ],
+                "en": "I have been to a concert.",
+                "vn": "Tôi đã từng đi xem hòa nhạc.",
+                "mn": "Би тоглолт үзэж байсан.",
+                "zh": "我去看过演唱会。"
+        },
+        {
+                "q": "가: 이 음식을 먹은 적이 있어요?<br>나: 네, 한국 식당에서 한 번 (먹다) _______.",
+                "item": "한 번",
+                "hintWord": "먹다 + -아/어 보다",
+                "ans": [
+                        "먹어봤어요",
+                        "먹어봤습니다"
+                ],
+                "en": "I have tried eating it.",
+                "vn": "Tôi đã ăn thử rồi.",
+                "mn": "Би идэж үзсэн.",
+                "zh": "我吃过一次。"
+        },
+        {
+                "q": "가: 김치를 직접 만든 적이 있어요?<br>나: 네, 친구하고 같이 (만들다) _______.",
+                "item": "김치를",
+                "hintWord": "만들다 + -아/어 보다",
+                "ans": [
+                        "만들어봤어요",
+                        "만들어봤습니다"
+                ],
+                "en": "I have tried making kimchi.",
+                "vn": "Tôi đã thử làm kimchi.",
+                "mn": "Би кимчи хийж үзсэн.",
+                "zh": "我做过泡菜。"
+        },
+        {
+                "q": "가: 공연을 얼마나 봤어요?<br>나: 공연을 (한 시간) _______ 봤어요.",
+                "item": "공연을",
+                "hintWord": "한 시간 + 동안",
+                "ans": [
+                        "한시간동안"
+                ],
+                "en": "I watched the performance for one hour.",
+                "vn": "Tôi đã xem buổi biểu diễn trong một tiếng.",
+                "mn": "Би тоглолтыг нэг цаг үзсэн.",
+                "zh": "我看了一个小时的演出。"
+        },
+        {
+                "q": "가: 제주도 여행을 얼마나 했어요?<br>나: 제주도에서 (이틀) _______ 여행했어요.",
+                "item": "제주도에서",
+                "hintWord": "이틀 + 동안",
+                "ans": [
+                        "이틀동안"
+                ],
+                "en": "I traveled on Jeju Island for two days.",
+                "vn": "Tôi đã du lịch ở đảo Jeju trong hai ngày.",
+                "mn": "Би Чэжүд хоёр өдөр аялсан.",
+                "zh": "我在济州岛旅行了两天。"
+        },
+        {
+                "q": "가: 오늘 저녁에 같이 미술관에 갈래요?<br>나: 좋아요. 저녁에 (시간이 있다) _______ 같이 가요.",
+                "item": "저녁에",
+                "hintWord": "시간이 있다 + -는데",
+                "ans": [
+                        "시간이있는데"
+                ],
+                "en": "I have time in the evening, so let’s go together.",
+                "vn": "Buổi tối tôi có thời gian, chúng ta đi cùng nhé.",
+                "mn": "Орой надад цаг байгаа, хамт явъя.",
+                "zh": "晚上我有时间，一起去吧。"
+        },
+        {
+                "q": "가: 밖에 날씨가 어때요?<br>나: 조금 (춥다) _______ 산책할 수 있어요.",
+                "item": "조금",
+                "hintWord": "춥다 + -은데",
+                "ans": [
+                        "추운데"
+                ],
+                "en": "It is a little cold, but we can take a walk.",
+                "vn": "Trời hơi lạnh nhưng có thể đi dạo.",
+                "mn": "Жаахан хүйтэн ч алхаж болно.",
+                "zh": "有点冷，但是可以散步。"
+        },
+        {
+                "q": "가: 마리아 씨는 회사원이에요?<br>나: 아니요, 저는 (학생이다) _______ 주말에 아르바이트를 해요.",
+                "item": "저는",
+                "hintWord": "학생이다 + -인데",
+                "ans": [
+                        "학생인데"
+                ],
+                "en": "I am a student, and I work part-time on weekends.",
+                "vn": "Tôi là sinh viên và cuối tuần đi làm thêm.",
+                "mn": "Би оюутан, амралтын өдрөөр цагийн ажил хийдэг.",
+                "zh": "我是学生，周末做兼职。"
+        },
+        {
+                "q": "가: 내일 누구를 만나요?<br>나: 내일 (만나다) _______ 사람이 있어요.",
+                "item": "내일",
+                "hintWord": "만나다 + -(으)ㄹ N",
+                "ans": [
+                        "만날"
+                ],
+                "en": "There is a person I will meet tomorrow.",
+                "vn": "Ngày mai tôi có người sẽ gặp.",
+                "mn": "Маргааш уулзах хүн байна.",
+                "zh": "明天有要见的人。"
+        },
+        {
+                "q": "가: 오늘 저녁에 무엇을 해요?<br>나: 오늘 저녁에 (보다) _______ 영화가 있어요.",
+                "item": "오늘 저녁에",
+                "hintWord": "보다 + -(으)ㄹ N",
+                "ans": [
+                        "볼"
+                ],
+                "en": "There is a movie I will watch tonight.",
+                "vn": "Tối nay tôi có bộ phim sẽ xem.",
+                "mn": "Өнөө орой үзэх кино байна.",
+                "zh": "今晚有要看的电影。"
+        },
+        {
+                "q": "가: 이건 뭐예요?<br>나: 친구에게 (주다) _______ 선물이에요.",
+                "item": "친구에게",
+                "hintWord": "주다 + -(으)ㄹ N",
+                "ans": [
+                        "줄"
+                ],
+                "en": "It is a gift to give to a friend.",
+                "vn": "Đây là món quà sẽ tặng bạn.",
+                "mn": "Энэ найздаа өгөх бэлэг.",
+                "zh": "这是要送给朋友的礼物。"
+        },
+        {
+                "q": "가: 버스 안에서 뭐 할 거예요?<br>나: 버스 안에서 (듣다) _______ 음악을 준비했어요.",
+                "item": "버스 안에서",
+                "hintWord": "듣다 + -(으)ㄹ N",
+                "ans": [
+                        "들을"
+                ],
+                "en": "I prepared music to listen to on the bus.",
+                "vn": "Tôi đã chuẩn bị nhạc để nghe trên xe buýt.",
+                "mn": "Автобусанд сонсох хөгжим бэлдсэн.",
+                "zh": "我准备了在公交车上听的音乐。"
+        },
+        {
+                "q": "가: 이번 주말에 어디에 가요?<br>나: 아직 (가다) _______ 곳을 정하지 못했어요.",
+                "item": "아직",
+                "hintWord": "가다 + -(으)ㄹ N",
+                "ans": [
+                        "갈"
+                ],
+                "en": "I have not decided where to go yet.",
+                "vn": "Tôi vẫn chưa quyết định nơi sẽ đi.",
+                "mn": "Очих газраа хараахан шийдээгүй.",
+                "zh": "还没决定要去的地方。"
+        },
+        {
+                "q": "가: 도서관에서 무엇을 빌렸어요?<br>나: 이번 주에 (읽다) _______ 책을 빌렸어요.",
+                "item": "이번 주에",
+                "hintWord": "읽다 + -(으)ㄹ N",
+                "ans": [
+                        "읽을"
+                ],
+                "en": "I borrowed a book to read this week.",
+                "vn": "Tôi đã mượn sách sẽ đọc trong tuần này.",
+                "mn": "Энэ долоо хоногт унших ном зээлсэн.",
+                "zh": "我借了这周要读的书。"
+        },
+        {
+                "q": "가: 내일 공연장에 무엇을 입고 갈 거예요?<br>나: 내일 (입다) _______ 옷을 미리 골랐어요.",
+                "item": "내일",
+                "hintWord": "입다 + -(으)ㄹ N",
+                "ans": [
+                        "입을"
+                ],
+                "en": "I chose the clothes I will wear tomorrow.",
+                "vn": "Tôi đã chọn trước quần áo sẽ mặc ngày mai.",
+                "mn": "Маргааш өмсөх хувцсаа урьдчилж сонгосон.",
+                "zh": "我提前选好了明天要穿的衣服。"
+        }
+];
+        const oxData = [
+        {
+                "q": "‘가 봤어요’는 어떤 장소에 가 본 경험이 있다는 뜻으로 사용할 수 있다.",
+                "a": "O",
+                "en": "‘가 봤어요’ can mean that one has been to a place before.",
+                "vn": "‘가 봤어요’ có thể có nghĩa là đã từng đi đến một nơi.",
+                "mn": "‘가 봤어요’ нь өмнө нь ямар нэг газар очиж байсан гэсэн утгатай.",
+                "zh": "‘가 봤어요’可以表示去过某个地方。"
+        },
+        {
+                "q": "‘먹다’에 ‘-아/어 보다’를 붙이면 ‘먹아 봤어요’가 된다.",
+                "a": "X",
+                "en": "The correct form is ‘먹어 봤어요,’ not ‘먹아 봤어요.’",
+                "vn": "Dạng đúng là ‘먹어 봤어요’, không phải ‘먹아 봤어요’.",
+                "mn": "Зөв хэлбэр нь ‘먹어 봤어요’, ‘먹아 봤어요’ биш.",
+                "zh": "正确形式是‘먹어 봤어요’，不是‘먹아 봤어요’。"
+        },
+        {
+                "q": "‘두 시간 동안 기다렸어요’는 기다린 시간이 두 시간이라는 뜻이다.",
+                "a": "O",
+                "en": "It means the waiting time was two hours.",
+                "vn": "Nó có nghĩa là thời gian chờ là hai tiếng.",
+                "mn": "Энэ нь хоёр цаг хүлээсэн гэсэн утгатай.",
+                "zh": "意思是等了两个小时。"
+        },
+        {
+                "q": "‘어제 동안 영화를 봤어요’는 자연스러운 기간 표현이다.",
+                "a": "X",
+                "en": "‘어제’ is a point in time, so ‘동안’ is unnatural here.",
+                "vn": "‘어제’ là mốc thời gian nên dùng với ‘동안’ không tự nhiên.",
+                "mn": "‘어제’ нь цагийн цэг тул ‘동안’-тай эвгүй.",
+                "zh": "‘어제’是时间点，和‘동안’搭配不自然。"
+        },
+        {
+                "q": "‘시간이 있는데 같이 갈래요?’에서 ‘-는데’는 뒤의 제안을 자연스럽게 연결한다.",
+                "a": "O",
+                "en": "‘-는데’ naturally connects the background to the suggestion.",
+                "vn": "‘-는데’ nối bối cảnh với lời đề nghị một cách tự nhiên.",
+                "mn": "‘-는데’ нь нөхцөл байдлыг саналтай байгалийн байдлаар холбодог.",
+                "zh": "‘-는데’自然地连接背景和建议。"
+        },
+        {
+                "q": "명사 ‘학생’ 뒤에는 ‘학생인데’처럼 ‘-인데’를 붙일 수 있다.",
+                "a": "O",
+                "en": "After a noun, ‘-인데’ can be used.",
+                "vn": "Sau danh từ có thể dùng ‘-인데’.",
+                "mn": "Нэр үгийн дараа ‘-인데’ хэрэглэж болно.",
+                "zh": "名词后可以用‘-인데’。"
+        },
+        {
+                "q": "‘내일 볼 영화’는 내일 볼 예정인 영화를 뜻한다.",
+                "a": "O",
+                "en": "It means a movie one will watch tomorrow.",
+                "vn": "Nó có nghĩa là bộ phim sẽ xem vào ngày mai.",
+                "mn": "Энэ нь маргааш үзэх кино гэсэн утгатай.",
+                "zh": "意思是明天要看的电影。"
+        },
+        {
+                "q": "‘듣다’에 ‘-(으)ㄹ N’을 붙이면 항상 ‘듣을 음악’이 된다.",
+                "a": "X",
+                "en": "The correct form is ‘들을 음악.’",
+                "vn": "Dạng đúng là ‘들을 음악’.",
+                "mn": "Зөв хэлбэр нь ‘들을 음악’.",
+                "zh": "正确形式是‘들을 음악’。"
+        },
+        {
+                "q": "‘한번 먹어 볼래요?’는 상대에게 음식을 시도해 보라고 권하는 말로 쓸 수 있다.",
+                "a": "O",
+                "en": "It can be used to invite someone to try food.",
+                "vn": "Có thể dùng để rủ ai đó ăn thử món ăn.",
+                "mn": "Хоол идэж үзэхийг санал болгоход хэрэглэж болно.",
+                "zh": "可以用来建议对方尝一尝食物。"
+        },
+        {
+                "q": "‘비싸다’에 ‘-ㄴ데’를 붙이면 ‘비싼데’가 된다.",
+                "a": "O",
+                "en": "‘비싸다’ becomes ‘비싼데.’",
+                "vn": "‘비싸다’ biến thành ‘비싼데’.",
+                "mn": "‘비싸다’ нь ‘비싼데’ болно.",
+                "zh": "‘비싸다’变成‘비싼데’。"
+        }
+];
+        const chatSteps = [
+        {
+                "npc": "수진: 한국에서 콘서트에 가 본 적이 있어요?",
+                "opts": [
+                        "네, 지난달에 K-pop 콘서트에 가 봤어요.",
+                        "네, 지난달에 K-pop 콘서트에 갈 동안이에요."
+                ],
+                "correct": 0,
+                "en": "Answer about concert-going experience.",
+                "vn": "Trả lời về kinh nghiệm đi xem hòa nhạc.",
+                "mn": "Тоглолт үзсэн туршлагын талаар хариулна.",
+                "zh": "回答是否有去过演唱会的经历。"
+        },
+        {
+                "npc": "수진: 공연장 앞에서 얼마나 기다렸어요?",
+                "opts": [
+                        "두 시간 동안 기다렸어요.",
+                        "두 시간인데 기다릴 영화예요."
+                ],
+                "correct": 0,
+                "en": "Say the duration of waiting.",
+                "vn": "Nói thời gian đã chờ.",
+                "mn": "Хүлээсэн хугацааг хэлнэ.",
+                "zh": "说明等待的时间。"
+        },
+        {
+                "npc": "수진: 기다리는 동안 뭐 했어요?",
+                "opts": [
+                        "시간이 있어서 근처 전시회를 봤어요.",
+                        "시간이 동안 근처 전시회를 줄 거예요."
+                ],
+                "correct": 0,
+                "en": "Explain what you did while waiting.",
+                "vn": "Giải thích đã làm gì trong lúc chờ.",
+                "mn": "Хүлээх хугацаанд юу хийснээ тайлбарлана.",
+                "zh": "说明等待期间做了什么。"
+        },
+        {
+                "npc": "수진: 그 전시회는 어땠어요?",
+                "opts": [
+                        "작은 전시회인데 작품이 아주 좋았어요.",
+                        "작은 전시회 동안 작품이 줄 좋았어요."
+                ],
+                "correct": 0,
+                "en": "Use ‘-인데’ to connect background and evaluation.",
+                "vn": "Dùng ‘-인데’ để nối bối cảnh và đánh giá.",
+                "mn": "Нөхцөл байдал ба үнэлгээг ‘-인데’-ээр холбоно.",
+                "zh": "用‘-인데’连接背景和评价。"
+        },
+        {
+                "npc": "수진: 이번 주말에도 문화생활을 할 거예요?",
+                "opts": [
+                        "네, 이번 주말에 볼 뮤지컬이 있어요.",
+                        "네, 이번 주말에 봤어요 뮤지컬 동안 있어요."
+                ],
+                "correct": 0,
+                "en": "Mention a musical you will watch.",
+                "vn": "Nói về vở nhạc kịch sẽ xem.",
+                "mn": "Үзэх мюзиклийн талаар хэлнэ.",
+                "zh": "说明周末要看的音乐剧。"
+        },
+        {
+                "npc": "수진: 누구하고 같이 봐요?",
+                "opts": [
+                        "친구하고 같이 볼 거예요. 친구에게 줄 표도 샀어요.",
+                        "친구하고 같이 동안이에요. 친구에게 주는데 표예요."
+                ],
+                "correct": 0,
+                "en": "Mention a ticket to give to a friend.",
+                "vn": "Nói về vé sẽ đưa cho bạn.",
+                "mn": "Найздаа өгөх тасалбарын талаар хэлнэ.",
+                "zh": "说明要给朋友的票。"
+        },
+        {
+                "npc": "수진: 한국 축제에 가 본 적도 있어요?",
+                "opts": [
+                        "아니요, 축제에 가 본 적은 아직 없어요.",
+                        "아니요, 축제에 갈 선물은 아직 없어요."
+                ],
+                "correct": 0,
+                "en": "Say you have not been to a festival yet.",
+                "vn": "Nói rằng bạn chưa từng đi lễ hội.",
+                "mn": "Наадамд хараахан очиж үзээгүй гэж хэлнэ.",
+                "zh": "说明还没有去过庆典。"
+        },
+        {
+                "npc": "수진: 그럼 이번 축제는 언제까지 해요?",
+                "opts": [
+                        "사흘 동안 해요.",
+                        "사흘인데 볼래요."
+                ],
+                "correct": 0,
+                "en": "Say the festival lasts for three days.",
+                "vn": "Nói lễ hội kéo dài ba ngày.",
+                "mn": "Наадам гурван өдөр үргэлжилнэ гэж хэлнэ.",
+                "zh": "说明庆典持续三天。"
+        },
+        {
+                "npc": "수진: 축제에 가면 어떤 음식을 먹고 싶어요?",
+                "opts": [
+                        "떡볶이를 한번 먹어 보고 싶어요.",
+                        "떡볶이를 한번 먹을 동안 싶어요."
+                ],
+                "correct": 0,
+                "en": "Say you want to try eating tteokbokki.",
+                "vn": "Nói muốn ăn thử tteokbokki.",
+                "mn": "Ттокпокки идэж үзмээр байгаагаа хэлнэ.",
+                "zh": "说想尝试吃炒年糕。"
+        },
+        {
+                "npc": "수진: 좋아요. 그럼 토요일에 같이 갈까요?",
+                "opts": [
+                        "네, 토요일에 시간이 있는데 같이 가요.",
+                        "네, 토요일에 시간 동안 같이 본 적이에요."
+                ],
+                "correct": 0,
+                "en": "Accept the invitation naturally.",
+                "vn": "Nhận lời mời một cách tự nhiên.",
+                "mn": "Урилгыг байгалийн байдлаар зөвшөөрнө.",
+                "zh": "自然地接受邀请。"
+        }
+];
+        const puzzleData = [
+        {
+                "h": "지난주에 콘서트에 간 경험을 말합니다.",
+                "words": [
+                        "저는",
+                        "지난주에",
+                        "콘서트에",
+                        "가",
+                        "봤어요."
+                ],
+                "ans": "저는 지난주에 콘서트에 가 봤어요.",
+                "en": "I went to a concert last week.",
+                "vn": "Tuần trước tôi đã đi xem hòa nhạc.",
+                "mn": "Би өнгөрсөн долоо хоногт тоглолт үзэж байсан.",
+                "zh": "我上周去看过演唱会。"
+        },
+        {
+                "h": "친구와 줄을 선 기간을 말합니다.",
+                "words": [
+                        "친구와",
+                        "두",
+                        "시간",
+                        "동안",
+                        "줄을",
+                        "섰어요."
+                ],
+                "ans": "친구와 두 시간 동안 줄을 섰어요.",
+                "en": "I stood in line with a friend for two hours.",
+                "vn": "Tôi đã xếp hàng với bạn trong hai tiếng.",
+                "mn": "Би найзтайгаа хоёр цаг дараалалд зогссон.",
+                "zh": "我和朋友排了两个小时的队。"
+        },
+        {
+                "h": "한국에서 뮤지컬을 본 경험이 있음을 말합니다.",
+                "words": [
+                        "한국에서",
+                        "뮤지컬을",
+                        "본",
+                        "적이",
+                        "있어요."
+                ],
+                "ans": "한국에서 뮤지컬을 본 적이 있어요.",
+                "en": "I have seen a musical in Korea.",
+                "vn": "Tôi đã từng xem nhạc kịch ở Hàn Quốc.",
+                "mn": "Би Солонгост мюзикл үзэж байсан.",
+                "zh": "我在韩国看过音乐剧。"
+        },
+        {
+                "h": "내일 볼 영화를 말합니다.",
+                "words": [
+                        "내일",
+                        "볼",
+                        "영화가",
+                        "아주",
+                        "기대돼요."
+                ],
+                "ans": "내일 볼 영화가 아주 기대돼요.",
+                "en": "I am really looking forward to the movie I will watch tomorrow.",
+                "vn": "Tôi rất mong chờ bộ phim sẽ xem ngày mai.",
+                "mn": "Маргааш үзэх киногоо их хүлээж байна.",
+                "zh": "我很期待明天要看的电影。"
+        },
+        {
+                "h": "친구에게 줄 선물을 샀다고 말합니다.",
+                "words": [
+                        "친구에게",
+                        "줄",
+                        "선물을",
+                        "샀어요."
+                ],
+                "ans": "친구에게 줄 선물을 샀어요.",
+                "en": "I bought a gift to give to a friend.",
+                "vn": "Tôi đã mua quà để tặng bạn.",
+                "mn": "Би найздаа өгөх бэлэг авсан.",
+                "zh": "我买了要送给朋友的礼物。"
+        },
+        {
+                "h": "시간이 있으니 전시회에 같이 가자고 제안합니다.",
+                "words": [
+                        "시간이",
+                        "있는데",
+                        "전시회에",
+                        "같이",
+                        "갈래요?"
+                ],
+                "ans": "시간이 있는데 전시회에 같이 갈래요?",
+                "en": "I have time, so shall we go to an exhibition together?",
+                "vn": "Tôi có thời gian, chúng ta đi triển lãm cùng nhau nhé?",
+                "mn": "Надад цаг байгаа, хамт үзэсгэлэн үзэх үү?",
+                "zh": "我有时间，一起去看展览吗？"
+        },
+        {
+                "h": "축제가 사흘 동안 계속된다고 말합니다.",
+                "words": [
+                        "축제는",
+                        "사흘",
+                        "동안",
+                        "계속돼요."
+                ],
+                "ans": "축제는 사흘 동안 계속돼요.",
+                "en": "The festival continues for three days.",
+                "vn": "Lễ hội kéo dài trong ba ngày.",
+                "mn": "Наадам гурван өдөр үргэлжилнэ.",
+                "zh": "庆典持续三天。"
+        },
+        {
+                "h": "표는 비싸지만 공연은 좋다고 말합니다.",
+                "words": [
+                        "표가",
+                        "비싼데",
+                        "공연이",
+                        "정말",
+                        "좋아요."
+                ],
+                "ans": "표가 비싼데 공연이 정말 좋아요.",
+                "en": "The ticket is expensive, but the performance is really good.",
+                "vn": "Vé đắt nhưng buổi biểu diễn rất hay.",
+                "mn": "Тасалбар үнэтэй ч тоглолт үнэхээр сайн.",
+                "zh": "票很贵，但是演出真的很好。"
+        },
+        {
+                "h": "스쿠버 다이빙을 해 보고 싶다고 말합니다.",
+                "words": [
+                        "저는",
+                        "스쿠버",
+                        "다이빙을",
+                        "해",
+                        "보고",
+                        "싶어요."
+                ],
+                "ans": "저는 스쿠버 다이빙을 해 보고 싶어요.",
+                "en": "I want to try scuba diving.",
+                "vn": "Tôi muốn thử lặn biển.",
+                "mn": "Би усанд шумбаж үзмээр байна.",
+                "zh": "我想尝试水肺潜水。"
+        },
+        {
+                "h": "오늘 만날 사람이 많다고 말합니다.",
+                "words": [
+                        "오늘",
+                        "만날",
+                        "사람이",
+                        "많아요."
+                ],
+                "ans": "오늘 만날 사람이 많아요.",
+                "en": "There are many people I will meet today.",
+                "vn": "Hôm nay tôi có nhiều người sẽ gặp.",
+                "mn": "Өнөөдөр уулзах хүн олон байна.",
+                "zh": "今天要见的人很多。"
+        }
+];
 
-        function updateTimerDisplay() {
-            let m = Math.floor(timeLeft / 60);
-            let s = timeLeft % 60;
-            document.getElementById('timerDisplay').innerText = `남은 시간: ${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}`;
+        let scores = { b1: 0, b2: 0, b3: 0, a1: 0, a2: 0, a3: 0 };
+
+        const normalize = (str) => String(str || '').trim().replace(/\s/g, '');
+        const pct = (score, total) => total ? Math.round((score / total) * 100) + '%' : '0%';
+        const PASS_RATE = 0.7;
+        const passMark = (total) => Math.ceil(total * PASS_RATE);
+        const isPassed = (score, total) => score >= passMark(total);
+
+        function showPassFailAlert(label, score, total) {
+            const message = `${label} 결과: ${score} / ${total} (${pct(score, total)})
+` +
+                `70% 통과 기준: ${passMark(total)}문항 이상 정답
+
+` +
+                `기준에 도달하지 못했습니다. 이 단계를 다시 풀어 주세요.`;
+            alert(message);
         }
 
-        function startTimer() {
-            clearInterval(timerInterval);
-            updateTimerDisplay();
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay();
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    alert(`시간이 초과되었습니다! 자동으로 ${currentStage}단계 채점을 진행합니다.`);
-                    checkAnswers(currentStage);
-                }
-            }, 1000);
+        function showPassAlert(label, score, total) {
+            alert(`${label} 통과! ${score} / ${total} (${pct(score, total)})
+다음 단계로 이동합니다.`);
         }
 
-        function checkAnswers(stage) {
-            clearInterval(timerInterval); 
-            let score = 0;
-            const inputs = document.querySelectorAll(`.q${stage}-input`);
-            const answerDisplays = document.querySelectorAll(`#stage${stage} .correct-answer`);
-            
-            inputs.forEach((input, index) => {
-                input.disabled = true; 
-                let userAnswer = input.value.replace(/\s+/g, '').trim(); 
-                let correctAnswer = input.getAttribute('data-answer').replace(/\s+/g, '').trim();
-                
-                let isCorrect = false;
-                if (userAnswer === correctAnswer) isCorrect = true;
-                if (stage === 3 && index === 2 && userAnswer === "찍는걸") isCorrect = true; // 복수 정답
-
-                if (isCorrect) {
-                    score++;
-                    input.style.backgroundColor = '#d4edda';
-                    input.style.borderColor = '#28a745';
-                } else {
-                    input.style.backgroundColor = '#f8d7da';
-                    input.style.borderColor = '#dc3545';
-                    answerDisplays[index].style.display = 'block';
-                }
-            });
-
-            const fb = document.getElementById(`feedback${stage}`);
-            fb.innerText = `[${stage}단계 결과] 5문제 중 ${score}문제 정답!`;
-            fb.style.display = 'block';
-            
-            document.querySelector(`#stage${stage} .submit-btn`).style.display = 'none';
-            document.getElementById(`next${stage}`).style.display = 'block';
+        function makeHintHtml(d) {
+            return `<div class="hint-box">
+                <div class="hint-line"><span class="hint-tag">🇺🇸 English:</span><span>${d.en}</span></div>
+                <div class="hint-line"><span class="hint-tag">🇻🇳 Tiếng Việt:</span><span>${d.vn}</span></div>
+                <div class="hint-line"><span class="hint-tag">🇲🇳 Монгол:</span><span>${d.mn}</span></div>
+                <div class="hint-line"><span class="hint-tag">🇨🇳 中文:</span><span>${d.zh}</span></div>
+            </div>`;
         }
 
-        function nextStage(next) {
-            document.getElementById(`stage${currentStage}`).style.display = 'none';
-            currentStage = next;
-            document.getElementById(`stage${currentStage}`).style.display = 'block';
-            
-            let stageName = next === 2 ? "2단계 (문법 적용)" : "3단계 (심화 쓰기)";
-            document.getElementById('stageIndicator').innerText = `현재 단계: ${stageName}`;
-            
-            timeLeft = stageTimes[next];
-            startTimer();
+        function openModule(m) {
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('module-' + m).style.display = 'block';
+            if (m === 'basic') initBasicModule();
+            if (m === 'app') startApp1();
             window.scrollTo(0, 0);
         }
 
-        function finishQuiz() {
-            window.location.href = "index.html"; 
+        function renderRadioQuestions(containerId, data, groupPrefix) {
+            const area = document.getElementById(containerId);
+            area.innerHTML = "";
+            data.forEach((d, i) => {
+                let html = `<div class="question-item">
+                    <div class="question-text">${i + 1}. ${d.q}</div>
+                    ${makeHintHtml(d)}
+                    <div class="options-group">`;
+                d.options.forEach(opt => {
+                    html += `<label class="option-label"><input type="radio" name="${groupPrefix}-q-${i}" value="${opt}"> ${opt}</label>`;
+                });
+                html += `</div><div id="${groupPrefix}-fb-${i}" class="feedback-msg"></div></div>`;
+                area.innerHTML += html;
+            });
         }
 
-        window.onload = startTimer;
+        function gradeRadioQuestions(data, groupPrefix) {
+            let correctCount = 0;
+            data.forEach((d, i) => {
+                const checked = document.querySelector(`input[name="${groupPrefix}-q-${i}"]:checked`);
+                const fb = document.getElementById(`${groupPrefix}-fb-${i}`);
+                if (checked && checked.value === d.ans) {
+                    correctCount++;
+                    fb.innerHTML = "✓ 정답입니다!";
+                    fb.className = "feedback-msg feedback-correct";
+                } else {
+                    fb.innerHTML = `✗ 오답입니다! (정답: ${d.ans})`;
+                    fb.className = "feedback-msg feedback-wrong";
+                }
+                fb.style.display = 'block';
+                document.querySelectorAll(`input[name="${groupPrefix}-q-${i}"]`).forEach(el => el.disabled = true);
+            });
+            return correctCount;
+        }
+
+        function initBasicModule() {
+            document.getElementById('basic-stage1').style.display = 'block';
+            renderRadioQuestions('b1-questions', b1Data, 'b1');
+        }
+
+        function submitBasic1() {
+            scores.b1 = gradeRadioQuestions(b1Data, 'b1');
+            if (!isPassed(scores.b1, b1Data.length)) {
+                showPassFailAlert('세부 1단계 어휘 워밍업', scores.b1, b1Data.length);
+                scores.b1 = 0;
+                renderRadioQuestions('b1-questions', b1Data, 'b1');
+                document.getElementById('basic-stage1').querySelector('.next-btn').style.display = '';
+                document.getElementById('basic-stage2').style.display = 'none';
+                window.scrollTo({ top: document.getElementById('basic-stage1').offsetTop, behavior: 'smooth' });
+                return;
+            }
+            showPassAlert('세부 1단계 어휘 워밍업', scores.b1, b1Data.length);
+            document.getElementById('basic-stage1').querySelector('.next-btn').style.display = 'none';
+            document.getElementById('basic-stage2').style.display = 'block';
+            renderRadioQuestions('b2-questions', b2Data, 'b2');
+            window.scrollTo({ top: document.getElementById('basic-stage2').offsetTop, behavior: 'smooth' });
+        }
+
+        function submitBasic2() {
+            scores.b2 = gradeRadioQuestions(b2Data, 'b2');
+            if (!isPassed(scores.b2, b2Data.length)) {
+                showPassFailAlert('세부 2단계 문법 대화', scores.b2, b2Data.length);
+                scores.b2 = 0;
+                renderRadioQuestions('b2-questions', b2Data, 'b2');
+                document.getElementById('basic-stage2').querySelector('.next-btn').style.display = '';
+                document.getElementById('basic-stage3').style.display = 'none';
+                window.scrollTo({ top: document.getElementById('basic-stage2').offsetTop, behavior: 'smooth' });
+                return;
+            }
+            showPassAlert('세부 2단계 문법 대화', scores.b2, b2Data.length);
+            document.getElementById('basic-stage2').querySelector('.next-btn').style.display = 'none';
+            document.getElementById('basic-stage3').style.display = 'block';
+            initBasicStage3();
+            window.scrollTo({ top: document.getElementById('basic-stage3').offsetTop, behavior: 'smooth' });
+        }
+
+        function initBasicStage3() {
+            const area = document.getElementById('b3-questions');
+            area.innerHTML = "";
+            b3Data.forEach((d, i) => {
+                const html = `<div class="question-item">
+                    <div class="question-text">${i + 1}. ${d.q}</div>
+                    ${makeHintHtml(d)}
+                    <div><strong>제시어:</strong> ${d.item} / <strong>문법:</strong> ${d.hintWord}<br>
+                    <input type="text" id="b3-in-${i}" class="write-input" placeholder="여기에 정답 입력" autocomplete="off"></div>
+                    <div id="b3-fb-${i}" class="feedback-msg"></div>
+                </div>`;
+                area.innerHTML += html;
+            });
+        }
+
+        function submitBasic3() {
+            let correctCount = 0;
+            b3Data.forEach((d, i) => {
+                const inputEl = document.getElementById(`b3-in-${i}`);
+                const inputVal = normalize(inputEl.value);
+                const fb = document.getElementById(`b3-fb-${i}`);
+                const isCorrect = d.ans.some(possibleAns => inputVal === normalize(possibleAns));
+                if (isCorrect) {
+                    correctCount++;
+                    fb.innerHTML = "✓ 정답입니다!";
+                    fb.className = "feedback-msg feedback-correct";
+                } else {
+                    fb.innerHTML = `✗ 오답입니다! (모범 답안 예시: ${d.ans[0]})`;
+                    fb.className = "feedback-msg feedback-wrong";
+                }
+                fb.style.display = 'block';
+                inputEl.disabled = true;
+            });
+            scores.b3 = correctCount;
+            if (!isPassed(scores.b3, b3Data.length)) {
+                showPassFailAlert('세부 3단계 직접 쓰기', scores.b3, b3Data.length);
+                scores.b3 = 0;
+                initBasicStage3();
+                window.scrollTo({ top: document.getElementById('basic-stage3').offsetTop, behavior: 'smooth' });
+                return;
+            }
+            showPassAlert('세부 3단계 직접 쓰기', scores.b3, b3Data.length);
+            document.getElementById('basic-stage1').style.display = 'none';
+            document.getElementById('basic-stage2').style.display = 'none';
+            document.getElementById('basic-stage3').style.display = 'none';
+            showBasicReport();
+        }
+
+        function setReport(idCount, idPct, score, total) {
+            document.getElementById(idCount).innerText = `${score} / ${total}`;
+            document.getElementById(idPct).innerText = pct(score, total);
+        }
+
+        function showBasicReport() {
+            const total = b1Data.length + b2Data.length + b3Data.length;
+            document.getElementById('basic-report').style.display = 'block';
+            setReport('r-b1-count', 'r-b1-pct', scores.b1, b1Data.length);
+            setReport('r-b2-count', 'r-b2-pct', scores.b2, b2Data.length);
+            setReport('r-b3-count', 'r-b3-pct', scores.b3, b3Data.length);
+            document.getElementById('r-basic-total').innerText = scores.b1 + scores.b2 + scores.b3;
+            document.getElementById('r-basic-denom').innerText = total;
+            window.scrollTo(0, 0);
+        }
+
+        let currentOxIdx = 0;
+        let oxFirstTry = true;
+
+        function startApp1() {
+            document.getElementById('app-stage1').style.display = 'block';
+            currentOxIdx = 0;
+            oxFirstTry = true;
+            scores.a1 = 0;
+            document.getElementById('ox-btn-group').style.display = 'block';
+            document.getElementById('ox-next-move').style.display = 'none';
+            showOxQuestion();
+        }
+
+        function showOxQuestion() {
+            const qTotal = oxData.length;
+            if (currentOxIdx >= qTotal) {
+                if (!isPassed(scores.a1, qTotal)) {
+                    showPassFailAlert('미션 1 O/X 판별 게임', scores.a1, qTotal);
+                    scores.a1 = 0;
+                    currentOxIdx = 0;
+                    oxFirstTry = true;
+                    document.getElementById('ox-btn-group').style.display = 'block';
+                    document.getElementById('ox-next-move').style.display = 'none';
+                    showOxQuestion();
+                    return;
+                }
+                showPassAlert('미션 1 O/X 판별 게임', scores.a1, qTotal);
+                document.getElementById('ox-progress').innerText = `완료 / ${qTotal}`;
+                document.getElementById('ox-txt').innerText = "🎉 미션 1 완료! 메신저 소통 게임으로 이동하세요.";
+                document.getElementById('ox-hint').innerHTML = "";
+                document.getElementById('ox-btn-group').style.display = 'none';
+                document.getElementById('ox-next-move').style.display = 'block';
+                return;
+            }
+            const item = oxData[currentOxIdx];
+            document.getElementById('ox-progress').innerText = `Q ${currentOxIdx + 1} / ${qTotal}`;
+            document.getElementById('ox-txt').innerText = item.q;
+            document.getElementById('ox-hint').innerHTML = makeHintHtml(item);
+        }
+
+        function handleOx(choice) {
+            if (oxData[currentOxIdx].a === choice) {
+                if (oxFirstTry) scores.a1++;
+                alert("정답입니다!");
+                currentOxIdx++;
+                oxFirstTry = true;
+                showOxQuestion();
+            } else {
+                alert("틀렸습니다. 지문과 힌트를 다시 확인해 보세요!");
+                oxFirstTry = false;
+            }
+        }
+
+        let chatIdx = 0;
+        let chatFirstTry = true;
+
+        function goToApp2() {
+            document.getElementById('app-stage1').style.display = 'none';
+            document.getElementById('app-stage2').style.display = 'block';
+            chatIdx = 0;
+            chatFirstTry = true;
+            scores.a2 = 0;
+            document.getElementById('chat-box').innerHTML = "";
+            document.getElementById('chat-next-move').style.display = 'none';
+            showChatStep();
+            window.scrollTo(0, 0);
+        }
+
+        function showChatStep() {
+            if (chatIdx >= chatSteps.length) {
+                if (!isPassed(scores.a2, chatSteps.length)) {
+                    showPassFailAlert('미션 2 톡톡 메신저 대화', scores.a2, chatSteps.length);
+                    scores.a2 = 0;
+                    chatIdx = 0;
+                    chatFirstTry = true;
+                    document.getElementById('chat-box').innerHTML = "";
+                    document.getElementById('chat-next-move').style.display = 'none';
+                    showChatStep();
+                    return;
+                }
+                showPassAlert('미션 2 톡톡 메신저 대화', scores.a2, chatSteps.length);
+                document.getElementById('chat-hint').innerHTML = "";
+                document.getElementById('chat-choice-area').innerHTML = "<p style='text-align:center; color:#27ae60; font-weight:bold;'>🎉 미션 2 성공!</p>";
+                document.getElementById('chat-next-move').style.display = 'block';
+                return;
+            }
+            const step = chatSteps[chatIdx];
+            appendBubble(`[${chatIdx + 1}/${chatSteps.length}] ${step.npc}`, 'npc');
+            document.getElementById('chat-hint').innerHTML = makeHintHtml(step);
+            const choiceArea = document.getElementById('chat-choice-area');
+            choiceArea.innerHTML = "";
+            step.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "choice-btn";
+                btn.innerText = opt;
+                btn.onclick = () => selectChatOption(idx);
+                choiceArea.appendChild(btn);
+            });
+        }
+
+        function selectChatOption(idx) {
+            const step = chatSteps[chatIdx];
+            if (idx === step.correct) {
+                if (chatFirstTry) scores.a2++;
+                appendBubble(step.opts[idx], 'user');
+                chatIdx++;
+                chatFirstTry = true;
+                setTimeout(showChatStep, 650);
+            } else {
+                alert("대화 문맥이나 목표 문법이 어색합니다. 다시 골라보세요!");
+                chatFirstTry = false;
+            }
+        }
+
+        function appendBubble(txt, type) {
+            const b = document.createElement('div');
+            b.className = `chat-bubble ${type}-bubble`;
+            b.innerText = txt;
+            const box = document.getElementById('chat-box');
+            box.appendChild(b);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        let puzIdx = 0;
+        let puzFirstTry = true;
+
+        function goToApp3() {
+            document.getElementById('app-stage2').style.display = 'none';
+            document.getElementById('app-stage3').style.display = 'block';
+            puzIdx = 0;
+            puzFirstTry = true;
+            scores.a3 = 0;
+            document.getElementById('puz-next-move').style.display = 'none';
+            loadPuzzleQuestion();
+            window.scrollTo(0, 0);
+        }
+
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function loadPuzzleQuestion() {
+            if (puzIdx >= puzzleData.length) {
+                if (!isPassed(scores.a3, puzzleData.length)) {
+                    showPassFailAlert('미션 3 단어 조립 문장 퍼즐', scores.a3, puzzleData.length);
+                    scores.a3 = 0;
+                    puzIdx = 0;
+                    puzFirstTry = true;
+                    document.getElementById('puz-next-move').style.display = 'none';
+                    loadPuzzleQuestion();
+                    return;
+                }
+                showPassAlert('미션 3 단어 조립 문장 퍼즐', scores.a3, puzzleData.length);
+                document.getElementById('puz-progress').innerText = `완료 / ${puzzleData.length}`;
+                document.getElementById('puz-hint-label').innerText = "🎉 모든 퍼즐 조립 완료!";
+                document.getElementById('puz-lang-hint').innerHTML = "";
+                document.getElementById('puzzle-drop').innerHTML = "<span style='color:#27ae60; font-weight:bold;'>최종 리포트로 이동하세요.</span>";
+                document.getElementById('puzzle-bank').style.display = 'none';
+                document.getElementById('puz-next-move').style.display = 'block';
+                return;
+            }
+            const item = puzzleData[puzIdx];
+            document.getElementById('puz-progress').innerText = `Q ${puzIdx + 1} / ${puzzleData.length}`;
+            document.getElementById('puz-hint-label').innerText = `의미 힌트: ${item.h}`;
+            document.getElementById('puz-lang-hint').innerHTML = makeHintHtml(item);
+            document.getElementById('puzzle-drop').innerHTML = "";
+            const bank = document.getElementById('puzzle-bank');
+            bank.innerHTML = "";
+            bank.style.display = 'flex';
+            shuffleArray(item.words).forEach(w => {
+                const block = document.createElement('div');
+                block.className = "word-block";
+                block.innerText = w;
+                block.onclick = () => toggleWord(block);
+                bank.appendChild(block);
+            });
+        }
+
+        function toggleWord(el) {
+            if (el.parentElement.id === "puzzle-bank") {
+                document.getElementById('puzzle-drop').appendChild(el);
+            } else {
+                document.getElementById('puzzle-bank').appendChild(el);
+            }
+        }
+
+        function resetPuzzle() {
+            puzFirstTry = false;
+            loadPuzzleQuestion();
+        }
+
+        function checkPuzzle() {
+            const userStr = Array.from(document.getElementById('puzzle-drop').children).map(c => c.innerText).join(" ");
+            if (normalize(userStr) === normalize(puzzleData[puzIdx].ans)) {
+                if (puzFirstTry) scores.a3++;
+                alert("훌륭합니다!");
+                puzIdx++;
+                puzFirstTry = true;
+                loadPuzzleQuestion();
+            } else {
+                alert("배치가 부자연스럽습니다. 다시 배치해 보세요!");
+                puzFirstTry = false;
+            }
+        }
+
+        function showAppReport() {
+            document.getElementById('app-stage3').style.display = 'none';
+            document.getElementById('app-report').style.display = 'block';
+            const total = oxData.length + chatSteps.length + puzzleData.length;
+            setReport('r-a1-count', 'r-a1-pct', scores.a1, oxData.length);
+            setReport('r-a2-count', 'r-a2-pct', scores.a2, chatSteps.length);
+            setReport('r-a3-count', 'r-a3-pct', scores.a3, puzzleData.length);
+            document.getElementById('r-app-total').innerText = scores.a1 + scores.a2 + scores.a3;
+            document.getElementById('r-app-denom').innerText = total;
+            window.scrollTo(0, 0);
+        }
     </script>
 </body>
 </html>
